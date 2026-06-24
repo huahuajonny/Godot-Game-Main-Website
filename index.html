@@ -435,7 +435,7 @@
             script.crossOrigin = 'anonymous'; script.async = true; container.appendChild(script);
         }
         // =================================================================
-        //  8. 热度排行榜（已加入你的专属 GitHub Token，解决 403 限制）
+        //  8. 热度排行榜（彻底去除 Token，采用纯净公开读取）
         // =================================================================
         async function fetchAndRenderRank() {
             const rankBox = document.getElementById('rankList');
@@ -445,22 +445,20 @@
             discussionTitles.forEach((title, index) => { queryStr += `d${index}: discussion(title: "${title}") { title totalCommentCount totalReactionCount }\n`; });
             queryStr += `}}`;
 
-            // 🟢 已填入你的专属 Token
-            const GITHUB_TOKEN = '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';
-
             try {
+                // 注意这里：去掉了 Authorization 头，直接请求 GraphQL 公开接口
                 const response = await fetch('https://api.github.com/graphql', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${GITHUB_TOKEN}`
+                        'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({ query: queryStr })
                 });
 
                 if (!response.ok) {
-                    if (response.status === 403) {
-                        rankBox.innerHTML = '<div style="color:var(--desc-color);font-size:13px;padding:10px 0;">🍃 获取排行榜受限</div>';
+                    // 如果是 403 或 401，说明公开读取也碰到了限制（极少见）
+                    if (response.status === 403 || response.status === 401) {
+                        rankBox.innerHTML = '<div style="color:var(--desc-color);font-size:13px;padding:10px 0;">🌐 公开读取受限</div>';
                     } else {
                         rankBox.innerHTML = '<div style="color:var(--desc-color);font-size:13px;padding:10px 0;">无法获取热度排名</div>';
                     }
@@ -472,6 +470,11 @@
 
                 let ranks = [];
                 const repoData = data.data.repository;
+                // 如果 repoData 为空（仓库没有 Discussion），直接显示无数据
+                if (!repoData) {
+                    return rankBox.innerHTML = '<div style="color:var(--desc-color);font-size:13px;padding:10px 0;">暂无游戏评论互动</div>';
+                }
+
                 Object.keys(repoData).forEach(key => {
                     const item = repoData[key];
                     if(item) {
@@ -482,7 +485,7 @@
                 ranks.sort((a, b) => b.score - a.score);
                 ranks = ranks.slice(0, 3);
 
-                if(ranks.length === 0) return rankBox.innerHTML = '<div style="color:var(--desc-color);font-size:13px;padding:10px 0;">暂时没有热度数据，快去评论互动吧</div>';
+                if(ranks.length === 0) return rankBox.innerHTML = '<div style="color:var(--desc-color);font-size:13px;padding:10px 0;">暂无游戏评论互动</div>';
 
                 const medal = ['🥇', '🥈', '🥉'];
                 rankBox.innerHTML = ranks.map((r, idx) => `
