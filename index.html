@@ -435,48 +435,50 @@
             script.crossOrigin = 'anonymous'; script.async = true; container.appendChild(script);
         }
         // =================================================================
-        //  8. 热度排行榜（终极版：弃用 GraphQL，改用最稳定的 REST API）
+        //  8. 热度排行榜（终极精准修复版）
         // =================================================================
         async function fetchAndRenderRank() {
             const rankBox = document.getElementById('rankList');
-            // 显示正在加载
             rankBox.innerHTML = '<div style="color:var(--desc-color);font-size:13px;padding:10px 0;">加载中...</div>';
 
             try {
                 let ranks = [];
 
-                // 循环读取 4 个游戏的讨论帖评论数
                 for (let i = 1; i <= 4; i++) {
-                    const title = `game-${i}`;
-                    // 使用最稳定的 REST API 获取讨论帖信息
-                    const url = `https://api.github.com/repos/huahuajonny/Godot-Game-Main-Website/discussions?title=${title}`;
+                    const targetTitle = `game-${i}`;
+                    // 依然使用 REST API
+                    const url = `https://api.github.com/repos/huahuajonny/Godot-Game-Main-Website/discussions`;
                     const response = await fetch(url);
 
                     if (response.ok) {
                         const data = await response.json();
-                        // 如果找到了对应的讨论帖，提取评论数 (comments) 和 反应数 (reactions)
-                        if (data && data.length > 0) {
-                            const discussion = data[0];
-                            // 计算热度：评论数*3 + 反应数
+                        // 在返回的列表中，找到标题完全匹配的那一个！
+                        const discussion = data.find(d => d.title === targetTitle);
+
+                        if (discussion) {
+                            // 算法：评论数*3 + 反应数
                             const score = (discussion.comments || 0) * 3 + (discussion.reactions?.total_count || 0);
-                            ranks.push({ title: title, score: score });
+                            ranks.push({ title: targetTitle, score: score });
+                        } else {
+                            // 如果该游戏没有建立讨论帖，分数为0
+                            ranks.push({ title: targetTitle, score: 0 });
                         }
                     }
-                    // 为了防止短时间内请求过多被封，加一个小小的 300ms 延迟
+                    // 为了避免请求过快，依然保留 300ms 延迟
                     await new Promise(r => setTimeout(r, 300));
                 }
 
-                // 按热度降序排序
+                // 按热度排序，取前三
                 ranks.sort((a, b) => b.score - a.score);
-                ranks = ranks.slice(0, 3); // 取前 3 名
+                const top3 = ranks.slice(0, 3);
 
-                if (ranks.length === 0 || ranks.every(r => r.score === 0)) {
+                if (top3.length === 0 || top3.every(r => r.score === 0)) {
                     rankBox.innerHTML = '<div style="color:var(--desc-color);font-size:13px;padding:10px 0;">暂无游戏评论互动</div>';
                     return;
                 }
 
                 const medal = ['🥇', '🥈', '🥉'];
-                rankBox.innerHTML = ranks.map((r, idx) => `
+                rankBox.innerHTML = top3.map((r, idx) => `
                     <div class="rank-item">
                         <span class="rnum">${medal[idx]}</span>
                         <span style="flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${r.title.replace('game-', '游戏 ')}</span>
@@ -485,8 +487,7 @@
                 `).join('');
 
             } catch(e) {
-                // 任何意外错误都不影响网站主体
-                rankBox.innerHTML = '<div style="color:var(--desc-color);font-size:13px;padding:10px 0;">网络加载中...</div>';
+                rankBox.innerHTML = '<div style="color:var(--desc-color);font-size:13px;padding:10px 0;">加载中...</div>';
             }
         }
         // =================================================================
