@@ -9,7 +9,7 @@
     <!-- Font Awesome 图标库 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 
-    <!-- 引入 Supabase 客户端 -->
+    <!-- 替换成更稳定的 unpkg CDN -->
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 
     <style>
@@ -236,7 +236,7 @@
 
     <script>
         // =================================================================
-        //  1. 配置区
+        //  1. 配置区（游戏数据 & 你最新的 Supabase 密钥）
         // =================================================================
         const GAMES_DATA = [{
             id: 1,
@@ -268,11 +268,12 @@
             shareUrl: 'https://fox-shotting-game.netlify.app/'
         }];
 
-        const SUPABASE_URL = 'https://xrispeaudhhapsuvkeehd.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhyaXNwZWF1ZGhhcHN1dmtlZWhkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyNDY3NzEsImV4cCI6MjA5NzgyMjc3MX0.mGWZQWkqcp_Vgjkt0vBh7Md1QShbZ556bZdwfGkNcYA';
+        // ✅ 已替换成你刚发的全新密钥
+        const SUPABASE_URL = 'https://wxsypcfwplnxfccwopno.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind4c3lwY2Z3cGxueGZjY3dvcG5vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyNzAwNTEsImV4cCI6MjA5Nzg0NjA1MX0.31axDCFZT3irWEO1nYbBXvHQfE3_P-2sK2Zlnl-feYg';
 
         // =================================================================
-        //  2. 核心修复：彻底解决 "Identifier 'supabase' has already been declared" 冲突
+        //  2. 核心初始化（防崩溃代码）
         // =================================================================
         let supabaseClient = null;
         try {
@@ -382,7 +383,7 @@
             if(btn) { const active = favorites.has(id); btn.classList.toggle('active', active); btn.innerHTML = `<i class="${active ? 'fas' : 'far'} fa-heart"></i> ${active ? '已收藏' : '收藏'}`; }
         }
 
-        // 全网点赞核心 (变量已统一改为 supabaseClient)
+        // 全网点赞核心 (升级了更稳定的错误捕获)
         async function handleLike(id, btn) {
             if (!supabaseClient) { showToast('⚠️ 当前云端点赞服务暂不可用'); return; }
             if(isLiking) return;
@@ -395,13 +396,21 @@
                     .from('game_stats')
                     .upsert({ game_id: id, like_count: currentCount + 1 }, { onConflict: 'game_id' })
                     .select();
+
                 if(!error && data && data.length > 0) {
                     countSpan.textContent = data[0].like_count;
                     btn.classList.add('liked');
                     showToast('👍 感谢你的点赞！');
                     fetchAndRenderRank();
-                } else { showToast('⚠️ 点赞失败，请稍后再试'); }
-            } catch(e) { showToast('⚠️ 网络错误'); } finally { isLiking = false; }
+                } else {
+                    showToast('⚠️ 点赞请求无响应，请重试');
+                }
+            } catch(e) {
+                console.error("点赞出错:", e);
+                showToast('⚠️ 网络环境异常，请切换到手机热点或更换网络再试');
+            } finally {
+                isLiking = false;
+            }
         }
 
         function handleComment(id) {
@@ -427,7 +436,7 @@
         }
 
         // =================================================================
-        //  8. 热度排行榜 (使用 GitHub GraphQL API)
+        //  8. 热度排行榜
         // =================================================================
         async function fetchAndRenderRank() {
             const rankBox = document.getElementById('rankList');
