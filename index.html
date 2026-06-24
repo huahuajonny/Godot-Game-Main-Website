@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Godot 游戏合集 - GitHub Pages</title>
+
+    <!-- Font Awesome 图标库 (用于按钮和界面图标) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
+    <style>
+        /* ===== 全局重置 & 基础样式 ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'PingFang SC', Roboto, 'Helvetica Neue', sans-serif;
+            background: #f5f7fa;
+            color: #1e293b;
+            padding-bottom: 60px;
+            min-height: 100vh;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* ===== 顶部导航栏 ===== */
+        .navbar {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            color: #fff;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar h1 {
+            font-size: 26px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .navbar h1 i {
+            color: #60a5fa;
+        }
+
+        .navbar .subtitle {
+            font-size: 14px;
+            color: #94a3b8;
+            font-weight: 400;
+        }
+
+        .navbar .stats {
+            display: flex;
+            gap: 24px;
+            font-size: 14px;
+            color: #cbd5e1;
+        }
+
+        .navbar .stats span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .navbar .stats i {
+            color: #60a5fa;
+        }
+
+        /* ===== 游戏卡片网格容器 ===== */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 28px;
+        }
+
+        /* ===== 单张游戏卡片样式 ===== */
+        .game-card {
+            background: #ffffff;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+            transition: transform 0.25s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid rgba(226, 232, 240, 0.5);
+        }
+
+        .game-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.10);
+        }
+
+        .game-card .thumbnail {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background: #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            color: #94a3b8;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .game-card .thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .game-card:hover .thumbnail img {
+            transform: scale(1.03);
+        }
+
+        .game-card .body {
+            padding: 18px 20px 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .game-card .body .title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: #0f172a;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .game-card .body .title .badge {
+            font-size: 11px;
+            background: #dbeafe;
+            color: #2563eb;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .game-card .body .description {
+            font-size: 14px;
+            color: #475569;
+            line-height: 1.6;
+            margin-bottom: 16px;
+            flex: 1;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* 卡片底部的操作按钮（分享、评论、收藏） */
+        .game-card .actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            border-top: 1px solid #f1f5f9;
+            padding-top: 14px;
+            margin-top: 4px;
+        }
+
+        .game-card .actions button {
+            flex: 1;
+            min-width: 60px;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            background: #f8fafc;
+            color: #334155;
+        }
+
+        .game-card .actions button:hover {
+            background: #eef2f6;
+            transform: translateY(-1px);
+        }
+
+        .game-card .actions button.share-btn {
+            color: #2563eb;
+            background: #eff6ff;
+        }
+        .game-card .actions button.share-btn:hover {
+            background: #dbeafe;
+        }
+
+        .game-card .actions button.comment-btn {
+            color: #7c3aed;
+            background: #f5f3ff;
+        }
+        .game-card .actions button.comment-btn:hover {
+            background: #ede9fe;
+        }
+
+        .game-card .actions button.favorite-btn {
+            color: #e11d48;
+            background: #fff1f2;
+        }
+        .game-card .actions button.favorite-btn:hover {
+            background: #ffe4e6;
+        }
+        .game-card .actions button.favorite-btn.active {
+            background: #fecdd3;
+            color: #be123c;
+        }
+        .game-card .actions button.favorite-btn.active i {
+            font-weight: 900;
+        }
+
+        /* ===== 右下角悬浮按钮 ===== */
+        .fab-container {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 999;
+        }
+
+        .fab-container .fab {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            border: none;
+            background: #1e293b;
+            color: #fff;
+            font-size: 20px;
+            cursor: pointer;
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.20);
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .fab-container .fab:hover {
+            transform: scale(1.08);
+            background: #0f172a;
+        }
+
+        .fab-container .fab.fav-fab {
+            background: #e11d48;
+        }
+        .fab-container .fab.fav-fab:hover {
+            background: #be123c;
+        }
+
+        .fab-container .fab.top-fab {
+            background: #2563eb;
+        }
+        .fab-container .fab.top-fab:hover {
+            background: #1d4ed8;
+        }
+
+        .fab-container .fab .badge-count {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            background: #f59e0b;
+            color: #fff;
+            font-size: 11px;
+            font-weight: 700;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: none;
+            /* 默认隐藏，有数量时通过 JS 显示 */
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        /* ===== 模态框（评论 和 收藏列表） ===== */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.60);
+            backdrop-filter: blur(6px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            animation: fadeIn 0.25s ease;
+        }
+
+        .modal-overlay.open {
+            display: flex;
+        }
+
+        .modal {
+            background: #fff;
+            border-radius: 24px;
+            max-width: 800px; /* 给 Giscus 评论框留出足够宽度 */
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            padding: 28px 32px 32px;
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.30);
+            animation: slideUp 0.30s ease;
+            position: relative;
+        }
+
+        .modal .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .modal .modal-header h2 {
+            font-size: 20px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .modal .modal-header .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #94a3b8;
+            cursor: pointer;
+            transition: color 0.2s;
+            padding: 4px 8px;
+            border-radius: 8px;
+        }
+        .modal .modal-header .close-btn:hover {
+            color: #1e293b;
+            background: #f1f5f9;
+        }
+
+        /* 收藏列表样式 */
+        .modal .favorite-list .fav-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        .modal .favorite-list .fav-item:last-child {
+            border-bottom: none;
+        }
+        .modal .favorite-list .fav-item .fav-title {
+            font-weight: 600;
+            font-size: 15px;
+        }
+        .modal .favorite-list .fav-item .fav-link {
+            color: #2563eb;
+            font-size: 13px;
+            cursor: pointer;
+        }
+        .modal .favorite-list .fav-item .fav-link:hover {
+            text-decoration: underline;
+        }
+        .modal .favorite-list .empty-msg {
+            color: #94a3b8;
+            text-align: center;
+            padding: 30px 0;
+        }
+
+        /* ===== Toast 提示 ===== */
+        .toast {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1e293b;
+            color: #fff;
+            padding: 12px 28px;
+            border-radius: 16px;
+            font-size: 14px;
+            font-weight: 500;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.20);
+            z-index: 9999;
+            opacity: 0;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            pointer-events: none;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(-8px);
+        }
+
+        /* ===== 动画 ===== */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.96);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* ===== 响应式适配 ===== */
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 16px 20px;
+                flex-direction: column;
+                gap: 8px;
+                text-align: center;
+            }
+            .navbar .stats {
+                font-size: 12px;
+                gap: 14px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            .grid {
+                grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+                gap: 18px;
+            }
+            .modal {
+                padding: 20px;
+                margin: 10px;
+            }
+            .fab-container {
+                bottom: 20px;
+                right: 20px;
+            }
+            .fab-container .fab {
+                width: 46px;
+                height: 46px;
+                font-size: 17px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== 顶部导航栏 ===== -->
+    <header class="navbar">
+        <div>
+            <h1>
+                <i class="fas fa-gamepad"></i>
+                Godot 游戏合集
+                <span class="subtitle">· 托管于 GitHub Pages</span>
+            </h1>
+        </div>
+        <div class="stats">
+            <span><i class="fas fa-box"></i> <strong id="gameCount">0</strong> 款游戏</span>
+            <span><i class="fas fa-heart"></i> <strong id="favCount">0</strong> 已收藏</span>
+        </div>
+    </header>
+
+    <!-- ===== 游戏卡片网格 ===== -->
+    <main class="container">
+        <div class="grid" id="gameGrid">
+            <!-- 由下方的 JavaScript 动态渲染生成 -->
+        </div>
+    </main>
+
+    <!-- ===== 右下角悬浮按钮 ===== -->
+    <div class="fab-container">
+        <button class="fab fav-fab" id="openFavoritesBtn" title="查看我的收藏">
+            <i class="fas fa-heart"></i>
+            <span class="badge-count" id="favBadge">0</span>
+        </button>
+        <button class="fab top-fab" id="scrollTopBtn" title="回到顶部">
+            <i class="fas fa-arrow-up"></i>
+        </button>
+    </div>
+
+    <!-- ===== 评论模态框（Giscus 版本） ===== -->
+    <div class="modal-overlay" id="commentModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2><i class="fas fa-comments"></i> 评论 · <span id="commentGameTitle">游戏</span></h2>
+                <button class="close-btn" id="closeCommentModal"><i class="fas fa-times"></i></button>
+            </div>
+            <!-- Giscus 容器：用来动态嵌入评论脚本 -->
+            <div id="giscus-container" style="margin-top: 10px; min-height: 300px;"></div>
+        </div>
+    </div>
+
+    <!-- ===== 收藏列表模态框 ===== -->
+    <div class="modal-overlay" id="favoritesModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2><i class="fas fa-heart" style="color:#e11d48;"></i> 我的收藏</h2>
+                <button class="close-btn" id="closeFavoritesModal"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="favorite-list" id="favoriteList">
+                <div class="empty-msg">还没有收藏的游戏，快去收藏吧 ❤️</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== Toast 全局提示 ===== -->
+    <div class="toast" id="toast"></div>
+
+
+    <!-- ============================================================ -->
+    <!-- ===== 主 JavaScript（所有逻辑都在这里） ===== -->
+    <!-- ============================================================ -->
+    <script>
+        // =================================================================
+        //  1. 配置区（你需要在这里修改你的游戏数据）
+        // =================================================================
+
+        // ---- 游戏数据 ----
+        // 将你部署在 Netlify 上的 Godot 游戏信息填入这里
+        //   id          : 唯一数字标识（从1开始）
+        //   title       : 游戏名称
+        //   description : 简短说明
+        //   thumbnail   : 缩略图 URL（可以放一张图片链接，或者留空自动生成占位图）
+        //   gameUrl     : 你的 Godot 游戏在 Netlify 上的实际链接
+        //   shareUrl    : 分享链接（默认同 gameUrl）
+            const GAMES_DATA = [{
+                id: 1,
+                title: 'Flappy Bird',
+                description: '按下空格键开始游戏，不要碰到管道',
+                thumbnail: 'https://images.unsplash.com/photo-1614728894747-a83421e2b9c9?w=400&h=225&fit=crop&auto=format',
+                gameUrl: 'https://flappy-bird-evening.netlify.app/',
+                shareUrl: 'https://flappy-bird-evening.netlify.app/'
+            }, {
+                id: 2,
+                title: '2D平台游戏 第一版',
+                description: 'Enter键，空格键跳跃；左方向键和右方向键控制方向',
+                thumbnail: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=400&h=225&fit=crop&auto=format',
+                gameUrl: 'https://platform-game-1-2d.netlify.app/',
+                shareUrl: 'https://platform-game-1-2d.netlify.app/'
+            }, {
+                id: 3,
+                title: '2D平台游戏 第二版',
+                description: 'Enter键，空格键,向上键跳跃；左方向键和右方向键控制方向；蘑菇可以增强跳跃；按ESC键暂停',
+                thumbnail: 'https://images.unsplash.com/photo-1605810230434-7631ac76ec81?w=400&h=225&fit=crop&auto=format',
+                gameUrl: 'https://platform-game-2-2d.netlify.app/',
+                shareUrl: 'https://platform-game-2-2d.netlify.app/'
+            }, {
+                id: 4,
+                title: 'Fox Shotting Game',
+                description: 'WASD控制狐狸行动方向，不断击退敌人，挑战高分',
+                thumbnail: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=400&h=225&fit=crop&auto=format',
+                gameUrl: 'https://fox-shotting-game.netlify.app/',
+                shareUrl: 'https://fox-shotting-game.netlify.app/'
+            }];
+
+        // =================================================================
+        //  2. 状态管理（收藏与评论）
+        // =================================================================
+
+        // 收藏列表 (Set 存储游戏 id)
+        let favorites = new Set();
+
+        // 当前正在查看评论的游戏 id
+        let currentCommentGameId = null;
+
+
+        // =================================================================
+        //  3. 本地存储操作 (localStorage)
+        // =================================================================
+
+        // 加载本地保存的收藏数据
+        function loadFavorites() {
+            try {
+                const raw = localStorage.getItem('godot_favorites');
+                if (raw) {
+                    const arr = JSON.parse(raw);
+                    favorites = new Set(arr);
+                }
+            } catch (_) { /* 忽略错误 */ }
+        }
+
+        // 保存收藏数据到本地
+        function saveFavorites() {
+            localStorage.setItem('godot_favorites', JSON.stringify([...favorites]));
+        }
+
+
+        // =================================================================
+        //  4. 工具函数
+        // =================================================================
+
+        function getGameById(id) {
+            return GAMES_DATA.find(g => g.id === id);
+        }
+
+        // 显示全局提示信息
+        function showToast(msg, duration = 2200) {
+            const el = document.getElementById('toast');
+            el.textContent = msg;
+            el.classList.add('show');
+            clearTimeout(el._hideTimer);
+            el._hideTimer = setTimeout(() => el.classList.remove('show'), duration);
+        }
+
+        // 生成缩略图占位 (如果 game 没有填 thumbnail 链接)
+        function getThumbnailPlaceholder(title) {
+            const colors = ['#2563eb', '#7c3aed', '#e11d48', '#0d9488', '#d97706', '#4f46e5'];
+            const c = colors[Math.floor(Math.random() * colors.length)];
+            const letter = title.charAt(0).toUpperCase();
+            return `<div style="background:${c}; width:100%; height:100%; display:flex; align-items:center; justify-content:center; font-size:64px; font-weight:700; color:#fff;">${letter}</div>`;
+        }
+
+
+        // =================================================================
+        //  5. 渲染游戏卡片
+        // =================================================================
+
+        function renderGames() {
+            const grid = document.getElementById('gameGrid');
+            grid.innerHTML = '';
+
+            GAMES_DATA.forEach(game => {
+                const isFav = favorites.has(game.id);
+
+                const card = document.createElement('div');
+                card.className = 'game-card';
+                card.dataset.id = game.id;
+
+                // 缩略图
+                const thumbDiv = document.createElement('div');
+                thumbDiv.className = 'thumbnail';
+                if (game.thumbnail) {
+                    thumbDiv.innerHTML =
+                        `<img src="${game.thumbnail}" alt="${game.title}" loading="lazy" onerror="this.parentElement.innerHTML='${getThumbnailPlaceholder(game.title)}'" />`;
+                } else {
+                    thumbDiv.innerHTML = getThumbnailPlaceholder(game.title);
+                }
+
+                // 卡片主体 + 按钮
+                const body = document.createElement('div');
+                body.className = 'body';
+
+                body.innerHTML = `
+                    <div class="title">
+                        ${game.title}
+                        <span class="badge">Godot</span>
+                    </div>
+                    <div class="description">${game.description}</div>
+                    <div class="actions">
+                        <button class="share-btn" data-id="${game.id}"><i class="fas fa-share-alt"></i> 分享</button>
+                        <button class="comment-btn" data-id="${game.id}"><i class="fas fa-comment"></i> 评论</button>
+                        <button class="favorite-btn ${isFav ? 'active' : ''}" data-id="${game.id}">
+                            <i class="${isFav ? 'fas' : 'far'} fa-heart"></i> ${isFav ? '已收藏' : '收藏'}
+                        </button>
+                    </div>
+                `;
+
+                card.appendChild(thumbDiv);
+                card.appendChild(body);
+                grid.appendChild(card);
+            });
+
+            // 更新顶部统计数字
+            document.getElementById('gameCount').textContent = GAMES_DATA.length;
+            updateFavBadge();
+
+            // 为卡片按钮绑定事件 (使用事件委托)
+            grid.addEventListener('click', handleCardClick);
+        }
+
+
+        // =================================================================
+        //  6. 卡片按钮事件处理
+        // =================================================================
+
+        function handleCardClick(e) {
+            const btn = e.target.closest('button');
+            if (!btn) return;
+
+            const id = parseInt(btn.dataset.id);
+            if (isNaN(id)) return;
+
+            if (btn.classList.contains('share-btn')) {
+                handleShare(id);
+            } else if (btn.classList.contains('comment-btn')) {
+                handleComment(id);
+            } else if (btn.classList.contains('favorite-btn')) {
+                handleFavorite(id);
+            }
+        }
+
+        // ---- 分享功能 ----
+        function handleShare(id) {
+            const game = getGameById(id);
+            if (!game) return;
+            const url = game.shareUrl || game.gameUrl;
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(url).then(() => {
+                    showToast('✅ 游戏链接已复制！');
+                }).catch(() => {
+                    fallbackCopy(url);
+                });
+            } else {
+                fallbackCopy(url);
+            }
+        }
+
+        function fallbackCopy(text) {
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            ta.style.position = 'fixed';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.select();
+            try {
+                document.execCommand('copy');
+                showToast('✅ 游戏链接已复制！');
+            } catch (_) {
+                showToast('⚠️ 复制失败，请手动复制链接');
+            }
+            document.body.removeChild(ta);
+        }
+
+        // ---- 收藏功能 ----
+        function handleFavorite(id) {
+            const game = getGameById(id);
+            if (!game) return;
+
+            if (favorites.has(id)) {
+                favorites.delete(id);
+                showToast('💔 已取消收藏');
+            } else {
+                favorites.add(id);
+                showToast('❤️ 已收藏！');
+            }
+            saveFavorites(); // 保存到本地
+            updateFavBadge();
+
+            // 同步更新当前卡片按钮的样式
+            const btn = document.querySelector(`.favorite-btn[data-id="${id}"]`);
+            if (btn) {
+                const active = favorites.has(id);
+                btn.classList.toggle('active', active);
+                btn.innerHTML = `<i class="${active ? 'fas' : 'far'} fa-heart"></i> ${active ? '已收藏' : '收藏'}`;
+            }
+        }
+
+        // ---- 评论功能（Giscus 版） ----
+        function handleComment(id) {
+            const game = getGameById(id);
+            if (!game) return;
+
+            currentCommentGameId = id;
+            document.getElementById('commentGameTitle').textContent = game.title;
+
+            // 加载对应游戏的 Giscus 评论线程
+            loadGiscus(id);
+
+            // 打开模态框
+            document.getElementById('commentModal').classList.add('open');
+        }
+
+
+        // =================================================================
+        //  7. Giscus 评论加载逻辑（已配置好你的 GitHub 仓库）
+        // =================================================================
+
+        function loadGiscus(gameId) {
+            const container = document.getElementById('giscus-container');
+            container.innerHTML = ''; // 清空旧的评论容器
+
+            // 根据游戏 ID 生成唯一的 Term (例如 game-1, game-2)，让每个游戏拥有独立的评论区
+            const term = `game-${gameId}`;
+
+            // 创建 Giscus 的 script 标签
+            const script = document.createElement('script');
+            script.src = 'https://giscus.app/client.js';
+            script.setAttribute('data-repo', 'huahuajonny/Godot-Game-Main-Website');
+            script.setAttribute('data-repo-id', 'R_kgDOTDbXFQ');
+            script.setAttribute('data-category', 'Announcements');
+            script.setAttribute('data-category-id', 'DIC_kwDOTDbXFc4C_xLf');
+            script.setAttribute('data-mapping', 'specific'); // 使用 specific 映射
+            script.setAttribute('data-term', term); // 核心：动态填入唯一的 term
+            script.setAttribute('data-strict', '0');
+            script.setAttribute('data-reactions-enabled', '1');
+            script.setAttribute('data-emit-metadata', '0');
+            script.setAttribute('data-input-position', 'bottom');
+            script.setAttribute('data-theme', 'light'); // 可以改为 'preferred_color_scheme' 跟随系统
+            script.setAttribute('data-lang', 'zh-CN');
+            script.crossOrigin = 'anonymous';
+            script.async = true;
+
+            container.appendChild(script);
+        }
+
+
+        // =================================================================
+        //  8. 模态框控制
+        // =================================================================
+
+        // 关闭评论模态框
+        document.getElementById('closeCommentModal').addEventListener('click', function() {
+            document.getElementById('commentModal').classList.remove('open');
+            // 关闭时清空 Giscus 容器，释放内存
+            document.getElementById('giscus-container').innerHTML = '';
+        });
+
+        // 点击评论模态框背景关闭
+        document.getElementById('commentModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.classList.remove('open');
+                document.getElementById('giscus-container').innerHTML = '';
+            }
+        });
+
+        // 关闭收藏模态框
+        document.getElementById('closeFavoritesModal').addEventListener('click', function() {
+            document.getElementById('favoritesModal').classList.remove('open');
+        });
+
+        // 点击收藏模态框背景关闭
+        document.getElementById('favoritesModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.classList.remove('open');
+            }
+        });
+
+
+        // =================================================================
+        //  9. 收藏列表渲染与打开
+        // =================================================================
+
+        function renderFavorites() {
+            const list = document.getElementById('favoriteList');
+            const favGames = GAMES_DATA.filter(g => favorites.has(g.id));
+
+            if (favGames.length === 0) {
+                list.innerHTML = `<div class="empty-msg">还没有收藏的游戏，快去收藏吧 ❤️</div>`;
+                return;
+            }
+
+            list.innerHTML = favGames.map(g =>
+                `<div class="fav-item">
+                    <span class="fav-title">${g.title}</span>
+                    <span class="fav-link" data-id="${g.id}"><i class="fas fa-external-link-alt"></i> 打开</span>
+                </div>`
+            ).join('');
+
+            // 点击收藏列表里的"打开"链接，跳转到对应游戏
+            list.querySelectorAll('.fav-link').forEach(el => {
+                el.addEventListener('click', function() {
+                    const id = parseInt(this.dataset.id);
+                    const game = getGameById(id);
+                    if (game) {
+                        window.open(game.gameUrl, '_blank');
+                    }
+                });
+            });
+        }
+
+        // 打开收藏模态框
+        document.getElementById('openFavoritesBtn').addEventListener('click', function() {
+            renderFavorites();
+            document.getElementById('favoritesModal').classList.add('open');
+        });
+
+
+        // =================================================================
+        //  10. 回到顶部
+        // =================================================================
+
+        document.getElementById('scrollTopBtn').addEventListener('click', function() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+
+        // =================================================================
+        //  11. 更新收藏角标
+        // =================================================================
+
+        function updateFavBadge() {
+            const count = favorites.size;
+            document.getElementById('favCount').textContent = count;
+            const badge = document.getElementById('favBadge');
+            badge.textContent = count;
+            badge.style.display = count > 0 ? 'flex' : 'none';
+        }
+
+
+        // =================================================================
+        //  12. 初始化启动
+        // =================================================================
+
+        function init() {
+            loadFavorites(); // 读取本地收藏
+            renderGames(); // 渲染页面
+            updateFavBadge(); // 更新角标
+        }
+
+        // 等待 DOM 加载完毕启动
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+    </script>
+</body>
+</html>
