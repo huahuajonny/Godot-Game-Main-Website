@@ -438,6 +438,9 @@
         // =================================================================
         //  8. 热度排行榜
         // =================================================================
+                // =================================================================
+        //  8. 热度排行榜 (针对 403 错误做了完美的优雅降级)
+        // =================================================================
         async function fetchAndRenderRank() {
             const rankBox = document.getElementById('rankList');
             const gameIds = GAMES_DATA.map(g => g.id);
@@ -452,6 +455,17 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ query: queryStr })
                 });
+
+                // 拦截并处理 HTTP 403 错误，不抛出异常，避免在控制台爆出红色报错
+                if (!response.ok) {
+                    if (response.status === 403) {
+                        rankBox.innerHTML = '<div style="color:var(--desc-color);font-size:13px;padding:10px 0;">🍃 排行榜因 GitHub 限制暂不可用</div>';
+                    } else {
+                        rankBox.innerHTML = '<div style="color:var(--desc-color);font-size:13px;padding:10px 0;">无法获取热度排名</div>';
+                    }
+                    return;
+                }
+
                 const data = await response.json();
                 if(data.errors) return rankBox.innerHTML = '<div style="color:var(--desc-color);font-size:13px;padding:10px 0;">无法获取热度排名</div>';
 
@@ -469,9 +483,11 @@
                     <span style="flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${r.title.replace('game-', '游戏 ')}</span>
                     <span style="font-weight:600;font-size:12px;">${r.score}</span></div>
                 `).join('');
-            } catch(e) { rankBox.innerHTML = '<div style="color:var(--desc-color);font-size:13px;padding:10px 0;">加载中...</div>'; }
+            } catch(e) {
+                // 任何其他未知的网络错误也会被捕获，不会导致网页卡死
+                rankBox.innerHTML = '<div style="color:var(--desc-color);font-size:13px;padding:10px 0;">加载中...</div>';
+            }
         }
-
         // =================================================================
         //  9. 模态框、收藏列表
         // =================================================================
