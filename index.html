@@ -435,66 +435,57 @@
             script.crossOrigin = 'anonymous'; script.async = true; container.appendChild(script);
         }
         // =================================================================
-        //  8. 热度排行榜（彻底去除 Token，采用纯净公开读取）
+        //  8. 热度排行榜（终极版：弃用 GraphQL，改用最稳定的 REST API）
         // =================================================================
         async function fetchAndRenderRank() {
             const rankBox = document.getElementById('rankList');
-            const gameIds = GAMES_DATA.map(g => g.id);
-            const discussionTitles = gameIds.map(id => `game-${id}`);
-            let queryStr = `{ repository(owner: "huahuajonny", name: "Godot-Game-Main-Website") {`;
-            discussionTitles.forEach((title, index) => { queryStr += `d${index}: discussion(title: "${title}") { title totalCommentCount totalReactionCount }\n`; });
-            queryStr += `}}`;
+            // 显示正在加载
+            rankBox.innerHTML = '<div style="color:var(--desc-color);font-size:13px;padding:10px 0;">加载中...</div>';
 
             try {
-                // 注意这里：去掉了 Authorization 头，直接请求 GraphQL 公开接口
-                const response = await fetch('https://api.github.com/graphql', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ query: queryStr })
-                });
+                let ranks = [];
 
-                if (!response.ok) {
-                    // 如果是 403 或 401，说明公开读取也碰到了限制（极少见）
-                    if (response.status === 403 || response.status === 401) {
-                        rankBox.innerHTML = '<div style="color:var(--desc-color);font-size:13px;padding:10px 0;">🌐 公开读取受限</div>';
-                    } else {
-                        rankBox.innerHTML = '<div style="color:var(--desc-color);font-size:13px;padding:10px 0;">无法获取热度排名</div>';
+                // 循环读取 4 个游戏的讨论帖评论数
+                for (let i = 1; i <= 4; i++) {
+                    const title = `game-${i}`;
+                    // 使用最稳定的 REST API 获取讨论帖信息
+                    const url = `https://api.github.com/repos/huahuajonny/Godot-Game-Main-Website/discussions?title=${title}`;
+                    const response = await fetch(url);
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        // 如果找到了对应的讨论帖，提取评论数 (comments) 和 反应数 (reactions)
+                        if (data && data.length > 0) {
+                            const discussion = data[0];
+                            // 计算热度：评论数*3 + 反应数
+                            const score = (discussion.comments || 0) * 3 + (discussion.reactions?.total_count || 0);
+                            ranks.push({ title: title, score: score });
+                        }
                     }
+                    // 为了防止短时间内请求过多被封，加一个小小的 300ms 延迟
+                    await new Promise(r => setTimeout(r, 300));
+                }
+
+                // 按热度降序排序
+                ranks.sort((a, b) => b.score - a.score);
+                ranks = ranks.slice(0, 3); // 取前 3 名
+
+                if (ranks.length === 0 || ranks.every(r => r.score === 0)) {
+                    rankBox.innerHTML = '<div style="color:var(--desc-color);font-size:13px;padding:10px 0;">暂无游戏评论互动</div>';
                     return;
                 }
 
-                const data = await response.json();
-                if(data.errors) return rankBox.innerHTML = '<div style="color:var(--desc-color);font-size:13px;padding:10px 0;">解析数据失败</div>';
-
-                let ranks = [];
-                const repoData = data.data.repository;
-                // 如果 repoData 为空（仓库没有 Discussion），直接显示无数据
-                if (!repoData) {
-                    return rankBox.innerHTML = '<div style="color:var(--desc-color);font-size:13px;padding:10px 0;">暂无游戏评论互动</div>';
-                }
-
-                Object.keys(repoData).forEach(key => {
-                    const item = repoData[key];
-                    if(item) {
-                        const score = (item.totalCommentCount || 0) * 3 + (item.totalReactionCount || 0);
-                        ranks.push({ title: item.title, score });
-                    }
-                });
-                ranks.sort((a, b) => b.score - a.score);
-                ranks = ranks.slice(0, 3);
-
-                if(ranks.length === 0) return rankBox.innerHTML = '<div style="color:var(--desc-color);font-size:13px;padding:10px 0;">暂无游戏评论互动</div>';
-
                 const medal = ['🥇', '🥈', '🥉'];
                 rankBox.innerHTML = ranks.map((r, idx) => `
-                    <div class="rank-item"><span class="rnum">${medal[idx]}</span>
-                    <span style="flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${r.title.replace('game-', '游戏 ')}</span>
-                    <span style="font-weight:600;font-size:12px;">${r.score}</span></div>
+                    <div class="rank-item">
+                        <span class="rnum">${medal[idx]}</span>
+                        <span style="flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${r.title.replace('game-', '游戏 ')}</span>
+                        <span style="font-weight:600;font-size:12px;">${r.score}</span>
+                    </div>
                 `).join('');
+
             } catch(e) {
-                // 如果网络有波动，不会崩掉，只会显示加载中
+                // 任何意外错误都不影响网站主体
                 rankBox.innerHTML = '<div style="color:var(--desc-color);font-size:13px;padding:10px 0;">网络加载中...</div>';
             }
         }
