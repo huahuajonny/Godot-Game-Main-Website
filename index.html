@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/x-icon" href="favicon.ico" />
-    <title>Godot 游戏合集 - GitHub Pages</title>
+    <title>Godot 游戏合集 - GitHub</title>
 
     <!-- Font Awesome 图标库 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
@@ -143,6 +143,27 @@
         .game-card .actions button.like-btn.liked { background: #d1fae5; border-color: #10b981; color: #047857; }
         .dark-mode .game-card .actions button.like-btn.liked { background: #064e3b; border-color: #10b981; color: #6ee7b7; }
 
+        .game-card .start-btn-wrapper { padding: 0 0 12px 0; }
+        .game-card .start-btn-wrapper .start-game-btn {
+            display: block; width: 100%; padding: 12px 0;
+            background: linear-gradient(135deg, #34d399, #10b981);
+            color: #fff; border: none; border-radius: 12px;
+            font-size: 16px; font-weight: 700; cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s; text-align: center;
+        }
+        .game-card .start-btn-wrapper .start-game-btn:hover {
+            transform: translateY(-2px); box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4);
+        }
+
+        /* 🟢 新增：游玩人数 */
+        .game-card .play-count {
+            display: flex; align-items: center; gap: 6px;
+            font-size: 13px; color: var(--desc-color);
+            padding-bottom: 10px; border-bottom: 1px solid var(--border-color); margin-bottom: 10px;
+        }
+        .game-card .play-count i { color: #60a5fa; font-size: 14px; }
+
+        /* 🟢 新增：右下角最近游玩 */
         .fab-container { position: fixed; bottom: 30px; right: 30px; display: flex; flex-direction: column; gap: 12px; z-index: 999; }
         .fab-container .fab { width: 52px; height: 52px; border-radius: 50%; border: none; background: #1e293b; color: #fff; font-size: 20px; cursor: pointer; box-shadow: 0 6px 24px rgba(0, 0, 0, 0.20); transition: all 0.25s ease; display: flex; align-items: center; justify-content: center; position: relative; }
         .fab-container .fab:hover { transform: scale(1.08); background: #0f172a; }
@@ -151,6 +172,27 @@
         .fab-container .fab.top-fab { background: #2563eb; }
         .fab-container .fab.top-fab:hover { background: #1d4ed8; }
         .fab-container .fab .badge-count { position: absolute; top: -6px; right: -6px; background: #f59e0b; color: #fff; font-size: 11px; font-weight: 700; width: 22px; height: 22px; border-radius: 50%; display: none; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15); }
+
+        /* 🟢 新增：最近游玩卡片 */
+        .recent-wrapper {
+            display: flex; flex-direction: column; gap: 4px; align-items: center;
+        }
+        .recent-wrapper .recent-games {
+            display: flex; gap: 6px;
+        }
+        .recent-wrapper .recent-games .recent-icon {
+            width: 32px; height: 32px; border-radius: 50%;
+            background: var(--input-bg); border: 1px solid var(--border-color);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px; color: var(--text-color);
+            cursor: pointer; transition: all 0.2s;
+        }
+        .recent-wrapper .recent-games .recent-icon:hover {
+            transform: scale(1.1); border-color: #60a5fa; background: var(--btn-hover);
+        }
+        .recent-wrapper .recent-label {
+            font-size: 10px; color: var(--desc-color); text-align: center;
+        }
 
         .toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); background: #1e293b; color: #fff; padding: 12px 28px; border-radius: 16px; font-size: 14px; font-weight: 500; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.20); z-index: 9999; opacity: 0; transition: 0.3s; pointer-events: none; }
         .toast.show { opacity: 1; transform: translateX(-50%) translateY(-8px); }
@@ -168,6 +210,21 @@
         .modal .favorite-list .fav-item .fav-link { color: #2563eb; font-size: 13px; cursor: pointer; }
         .modal .favorite-list .empty-msg { color: #94a3b8; text-align: center; padding: 30px 0; }
 
+        .footer-tech {
+            max-width: 1400px; margin: 60px auto 30px; padding: 0 20px;
+            display: flex; flex-wrap: wrap; justify-content: center; gap: 16px;
+            border-top: 1px solid var(--border-color); padding-top: 40px;
+        }
+        .footer-tech .tech-btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 10px 20px; background: var(--input-bg);
+            border: 1px solid var(--border-color); border-radius: 50px;
+            color: var(--text-color); font-size: 14px; font-weight: 500;
+            transition: all 0.2s; cursor: pointer; text-decoration: none;
+        }
+        .footer-tech .tech-btn:hover { background: var(--btn-hover); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); }
+        .footer-tech .tech-btn i { font-size: 18px; }
+
         @media (max-width: 768px) {
             .navbar { padding: 16px 20px; flex-direction: column; gap: 12px; text-align: center; }
             .navbar .right-group { width: 100%; justify-content: center; }
@@ -177,6 +234,8 @@
             .fab-container .fab { width: 46px; height: 46px; font-size: 17px; }
             .toolbar-container { flex-direction: column; }
             .rank-box { flex: 1 1 auto; min-width: unset; }
+            .footer-tech { gap: 12px; }
+            .recent-wrapper .recent-games .recent-icon { width: 28px; height: 28px; font-size: 12px; }
         }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes slideUp { from { opacity: 0; transform: translateY(30px) scale(0.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
@@ -184,7 +243,9 @@
 </head>
 <body>
     <header class="navbar">
-        <div><h1><i class="fas fa-gamepad"></i> Godot 游戏合集 <span class="subtitle">· 托管于 GitHub Pages</span></h1></div>
+        <div>
+            <h1><i class="fas fa-gamepad"></i> Godot 游戏合集 <span class="subtitle">· 基于 GitHub 构建</span></h1>
+        </div>
         <div class="right-group">
             <div class="stats">
                 <span><i class="fas fa-box"></i> <strong id="gameCount">0</strong> 款游戏</span>
@@ -206,14 +267,27 @@
             <div class="rank-box" id="rankBox">
                 <h3><i class="fas fa-chart-simple"></i> 热度排行</h3>
                 <div id="rankList">
-                    <div style="font-size: 13px; color: var(--desc-color); padding: 10px 0;">正在获取热度数据...</div>
+                    <div style="font-size: 13px; color: var(--desc-color); padding: 10px 0;">加载中...</div>
                 </div>
             </div>
         </div>
         <div class="grid" id="gameGrid"></div>
     </main>
 
+    <div class="footer-tech">
+        <a href="https://godotengine.org/" target="_blank" class="tech-btn"><i class="fas fa-cube" style="color:#478cbf;"></i> Godot 引擎</a>
+        <a href="https://github.com/" target="_blank" class="tech-btn"><i class="fab fa-github" style="color:#333;"></i> GitHub 平台</a>
+        <a href="https://giscus.app/zh-CN" target="_blank" class="tech-btn"><i class="fas fa-comments" style="color:#7c3aed;"></i> Giscus 评论</a>
+        <a href="https://supabase.com/" target="_blank" class="tech-btn"><i class="fas fa-database" style="color:#3ecf8e;"></i> Supabase 后端</a>
+        <a href="https://www.netlify.com/" target="_blank" class="tech-btn"><i class="fas fa-cloud-upload-alt" style="color:#00ad9f;"></i> Netlify 托管</a>
+    </div>
+
+    <!-- 🟢 新增：最近游玩数据展示 -->
     <div class="fab-container">
+        <div class="recent-wrapper" id="recentWrapper">
+            <div class="recent-games" id="recentGames"></div>
+            <div class="recent-label">最近游玩</div>
+        </div>
         <button class="fab fav-fab" id="openFavoritesBtn" title="查看我的收藏"><i class="fas fa-heart"></i><span class="badge-count" id="favBadge">0</span></button>
         <button class="fab top-fab" id="scrollTopBtn" title="回到顶部"><i class="fas fa-arrow-up"></i></button>
     </div>
@@ -236,44 +310,45 @@
 
     <script>
         // =================================================================
-        //  1. 配置区（游戏数据 & 你最新的 Supabase 密钥）
+        //  1. 配置区
         // =================================================================
         const GAMES_DATA = [{
             id: 1,
             title: 'Flappy Bird',
-            description: '按下空格键开始游戏，不要碰到管道',
-            thumbnail: 'https://images.unsplash.com/photo-1614728894747-a83421e2b9c9?w=400&h=225&fit=crop&auto=format',
+            description: '按下空格键开始游戏，不要碰到管道。已更新背景切换功能！',
+            // 🟢 请把下面的 URL 替换成你上传到自己 GitHub 仓库的图片路径
+            // 比如：'https://huahuajonny.github.io/Godot-Game-Main-Website/images/flappy.png'
+            thumbnail: 'https://huahuajonny.github.io/Godot-Game-Main-Website/images/Flappy bird.png',
             gameUrl: 'https://flappy-bird-evening.netlify.app/',
             shareUrl: 'https://flappy-bird-evening.netlify.app/'
         }, {
             id: 2,
             title: '2D平台游戏 第一版',
             description: 'Enter键，空格键跳跃；左方向键和右方向键控制方向',
-            thumbnail: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=400&h=225&fit=crop&auto=format',
+            thumbnail: 'https://huahuajonny.github.io/Godot-Game-Main-Website/images/Platform-Game-1.png',
             gameUrl: 'https://platform-game-1-2d.netlify.app/',
             shareUrl: 'https://platform-game-1-2d.netlify.app/'
         }, {
             id: 3,
             title: '2D平台游戏 第二版',
             description: 'Enter键，空格键,向上键跳跃；蘑菇增强跳跃；ESC暂停',
-            thumbnail: 'https://images.unsplash.com/photo-1605810230434-7631ac76ec81?w=400&h=225&fit=crop&auto=format',
+            thumbnail: 'https://huahuajonny.github.io/Godot-Game-Main-Website/images/Platform-Game-2.png',
             gameUrl: 'https://platform-game-2-2d.netlify.app/',
             shareUrl: 'https://platform-game-2-2d.netlify.app/'
         }, {
             id: 4,
             title: 'Fox Shotting Game',
             description: 'WASD控制狐狸行动方向，不断击退敌人，挑战高分',
-            thumbnail: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=400&h=225&fit=crop&auto=format',
+            thumbnail: 'https://huahuajonny.github.io/Godot-Game-Main-Website/images/Fox-Shotting-Game.png',
             gameUrl: 'https://fox-shotting-game.netlify.app/',
             shareUrl: 'https://fox-shotting-game.netlify.app/'
         }];
 
-        // ✅ 已替换成你刚发的全新密钥
         const SUPABASE_URL = 'https://wxsypcfwplnxfccwopno.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind4c3lwY2Z3cGxueGZjY3dvcG5vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyNzAwNTEsImV4cCI6MjA5Nzg0NjA1MX0.31axDCFZT3irWEO1nYbBXvHQfE3_P-2sK2Zlnl-feYg';
 
         // =================================================================
-        //  2. 核心初始化（防崩溃代码）
+        //  2. 核心初始化
         // =================================================================
         let supabaseClient = null;
         try {
@@ -297,12 +372,27 @@
         function saveFavorites() { localStorage.setItem('godot_favorites', JSON.stringify([...favorites])); }
         function loadTheme() { const theme = localStorage.getItem('theme'); if(theme === 'dark') { document.body.classList.add('dark-mode'); document.querySelector('#themeToggle i').className = 'fas fa-sun'; } }
         function saveTheme(theme) { localStorage.setItem('theme', theme); }
+
+        // 存储游玩统计
+        function getPlayCount(gameId) {
+            const key = `play_count_${gameId}`;
+            return parseInt(localStorage.getItem(key) || '0');
+        }
+        function incrementPlayCount(gameId) {
+            const key = `play_count_${gameId}`;
+            const newCount = getPlayCount(gameId) + 1;
+            localStorage.setItem(key, newCount.toString());
+            return newCount;
+        }
+
+        // 存储最近游玩
         function addRecentPlay(gameId) {
             let recent = JSON.parse(localStorage.getItem('godot_recent') || '[]');
             recent = recent.filter(id => id !== gameId);
             recent.unshift(gameId);
             if(recent.length > 5) recent.pop();
             localStorage.setItem('godot_recent', JSON.stringify(recent));
+            renderRecentGames(); // 立即更新左下角的展示
         }
 
         // =================================================================
@@ -336,6 +426,7 @@
             gameList.forEach(game => {
                 const isFav = favorites.has(game.id);
                 const likeCount = likesMap[game.id] || 0;
+                const playCount = getPlayCount(game.id);
 
                 const card = document.createElement('div'); card.className = 'game-card'; card.dataset.id = game.id;
                 const thumbDiv = document.createElement('div'); thumbDiv.className = 'thumbnail';
@@ -347,6 +438,12 @@
                 body.innerHTML = `
                     <div class="title">${game.title}<span class="badge">Godot</span></div>
                     <div class="description">${game.description}</div>
+                    <div class="play-count"><i class="fas fa-user"></i> ${playCount} 次游玩</div>
+                    <div class="start-btn-wrapper">
+                        <button class="start-game-btn" data-id="${game.id}">
+                            <i class="fas fa-play"></i> 开始游戏
+                        </button>
+                    </div>
                     <div class="actions">
                         <button class="share-btn" data-id="${game.id}"><i class="fas fa-share-alt"></i> 分享</button>
                         <button class="comment-btn" data-id="${game.id}"><i class="fas fa-comment"></i> 评论</button>
@@ -360,6 +457,21 @@
             document.getElementById('gameCount').textContent = GAMES_DATA.length;
             updateFavBadge();
             grid.addEventListener('click', handleCardClick);
+            renderRecentGames(); // 🟢 加载时顺便刷新最近游玩
+        }
+
+        // 🟢 渲染最近游玩小图标
+        function renderRecentGames() {
+            const wrapper = document.getElementById('recentGames');
+            const recentIds = JSON.parse(localStorage.getItem('godot_recent') || '[]').slice(0, 3);
+            if(recentIds.length === 0) { wrapper.innerHTML = '<div style="font-size:11px;color:var(--desc-color);padding:4px 0;">暂无记录</div>'; return; }
+            wrapper.innerHTML = recentIds.map(id => {
+                const game = getGameById(id);
+                if(!game) return '';
+                // 取标题第一个字作为默认图标
+                const initial = game.title.charAt(0);
+                return `<div class="recent-icon" title="${game.title}" onclick="window.open('${game.gameUrl}', '_blank')">${initial}</div>`;
+            }).join('');
         }
 
         // =================================================================
@@ -372,6 +484,21 @@
             else if(btn.classList.contains('comment-btn')) handleComment(id);
             else if(btn.classList.contains('favorite-btn')) handleFavorite(id);
             else if(btn.classList.contains('like-btn')) handleLike(id, btn);
+            else if(btn.classList.contains('start-game-btn')) handleStartGame(id);
+        }
+
+        function handleStartGame(id) {
+            const game = getGameById(id); if(!game) return;
+            // 🟢 记录游玩次数和最近游玩
+            const newCount = incrementPlayCount(id);
+            addRecentPlay(id);
+            // 立即更新卡片上的数字（不重新渲染整个网格，直接改 DOM）
+            const card = document.querySelector(`.game-card[data-id="${id}"]`);
+            if(card) {
+                const countEl = card.querySelector('.play-count');
+                if(countEl) countEl.innerHTML = `<i class="fas fa-user"></i> ${newCount} 次游玩`;
+            }
+            window.open(game.gameUrl, '_blank');
         }
 
         function handleShare(id) { const game = getGameById(id); if(!game) return; if(navigator.clipboard) navigator.clipboard.writeText(game.shareUrl || game.gameUrl).then(() => showToast('✅ 链接已复制！')); else showToast('⚠️ 请手动复制链接'); }
@@ -383,7 +510,6 @@
             if(btn) { const active = favorites.has(id); btn.classList.toggle('active', active); btn.innerHTML = `<i class="${active ? 'fas' : 'far'} fa-heart"></i> ${active ? '已收藏' : '收藏'}`; }
         }
 
-        // 全网点赞核心 (升级了更稳定的错误捕获)
         async function handleLike(id, btn) {
             if (!supabaseClient) { showToast('⚠️ 当前云端点赞服务暂不可用'); return; }
             if(isLiking) return;
@@ -402,15 +528,8 @@
                     btn.classList.add('liked');
                     showToast('👍 感谢你的点赞！');
                     fetchAndRenderRank();
-                } else {
-                    showToast('⚠️ 点赞请求无响应，请重试');
-                }
-            } catch(e) {
-                console.error("点赞出错:", e);
-                showToast('⚠️ 网络环境异常，请切换到手机热点或更换网络再试');
-            } finally {
-                isLiking = false;
-            }
+                } else { showToast('⚠️ 点赞请求无响应，请重试'); }
+            } catch(e) { showToast('⚠️ 网络环境异常'); } finally { isLiking = false; }
         }
 
         function handleComment(id) {
@@ -434,8 +553,9 @@
             script.setAttribute('data-theme', getGiscusTheme()); script.setAttribute('data-lang', 'zh-CN');
             script.crossOrigin = 'anonymous'; script.async = true; container.appendChild(script);
         }
+
         // =================================================================
-        //  8. 热度排行榜（终极精准修复版）
+        //  8. 热度排行榜
         // =================================================================
         async function fetchAndRenderRank() {
             const rankBox = document.getElementById('rankList');
@@ -443,53 +563,35 @@
 
             try {
                 let ranks = [];
-
                 for (let i = 1; i <= 4; i++) {
                     const targetTitle = `game-${i}`;
-                    // 依然使用 REST API
                     const url = `https://api.github.com/repos/huahuajonny/Godot-Game-Main-Website/discussions`;
                     const response = await fetch(url);
-
                     if (response.ok) {
                         const data = await response.json();
-                        // 在返回的列表中，找到标题完全匹配的那一个！
                         const discussion = data.find(d => d.title === targetTitle);
-
                         if (discussion) {
-                            // 算法：评论数*3 + 反应数
                             const score = (discussion.comments || 0) * 3 + (discussion.reactions?.total_count || 0);
                             ranks.push({ title: targetTitle, score: score });
-                        } else {
-                            // 如果该游戏没有建立讨论帖，分数为0
-                            ranks.push({ title: targetTitle, score: 0 });
-                        }
+                        } else { ranks.push({ title: targetTitle, score: 0 }); }
                     }
-                    // 为了避免请求过快，依然保留 300ms 延迟
                     await new Promise(r => setTimeout(r, 300));
                 }
-
-                // 按热度排序，取前三
                 ranks.sort((a, b) => b.score - a.score);
                 const top3 = ranks.slice(0, 3);
-
                 if (top3.length === 0 || top3.every(r => r.score === 0)) {
                     rankBox.innerHTML = '<div style="color:var(--desc-color);font-size:13px;padding:10px 0;">暂无游戏评论互动</div>';
                     return;
                 }
-
                 const medal = ['🥇', '🥈', '🥉'];
                 rankBox.innerHTML = top3.map((r, idx) => `
-                    <div class="rank-item">
-                        <span class="rnum">${medal[idx]}</span>
-                        <span style="flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${r.title.replace('game-', '游戏 ')}</span>
-                        <span style="font-weight:600;font-size:12px;">${r.score}</span>
-                    </div>
+                    <div class="rank-item"><span class="rnum">${medal[idx]}</span>
+                    <span style="flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${r.title.replace('game-', '游戏 ')}</span>
+                    <span style="font-weight:600;font-size:12px;">${r.score}</span></div>
                 `).join('');
-
-            } catch(e) {
-                rankBox.innerHTML = '<div style="color:var(--desc-color);font-size:13px;padding:10px 0;">加载中...</div>';
-            }
+            } catch(e) { rankBox.innerHTML = '<div style="color:var(--desc-color);font-size:13px;padding:10px 0;">加载中...</div>'; }
         }
+
         // =================================================================
         //  9. 模态框、收藏列表
         // =================================================================
@@ -520,6 +622,8 @@
             if(GAMES_DATA.length === 0) return showToast('⚠️ 当前没有可用的游戏');
             const randomIndex = Math.floor(Math.random() * GAMES_DATA.length);
             const game = GAMES_DATA[randomIndex];
+            // 🟢 点击随机时也记录游玩次数
+            incrementPlayCount(game.id);
             addRecentPlay(game.id);
             showToast(`🎲 随机选择：${game.title}，正在打开...`);
             window.open(game.gameUrl, '_blank');
