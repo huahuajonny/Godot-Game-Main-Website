@@ -13,6 +13,88 @@
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 
     <style>
+        /* =================================================================
+           0. 🟢 新增：黑客风格全屏启动画面
+           ================================================================= */
+        #splash-screen {
+            position: fixed; inset: 0; z-index: 9999;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            background: #f5f7fa; /* 默认亮色背景 */
+            color: #1e293b;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+            font-family: 'Courier New', Courier, monospace; /* 黑客风字体 */
+        }
+
+        /* 暗黑模式下的启动画面 */
+        .dark-mode #splash-screen {
+            background: #0d1117;
+            color: #00ff41; /* 极客绿 */
+        }
+
+        /* 启动画面隐藏状态 */
+        #splash-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        /* 黑客风加载动画 - 终端旋转环 */
+        .hacker-loader {
+            width: 80px; height: 80px;
+            position: relative;
+            margin-bottom: 24px;
+        }
+        .hacker-loader .ring {
+            position: absolute; inset: 0; border-radius: 50%;
+            border: 3px solid transparent;
+            box-sizing: border-box;
+        }
+        .hacker-loader .ring:nth-child(1) {
+            border-top-color: inherit;
+            animation: spin 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+        }
+        .hacker-loader .ring:nth-child(2) {
+            border-right-color: inherit;
+            animation: spin 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite -0.2s;
+        }
+        .hacker-loader .ring:nth-child(3) {
+            border-bottom-color: inherit;
+            animation: spin 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite -0.4s;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* 内部闪烁光标 */
+        .hacker-loader .cursor {
+            position: absolute; inset: 0;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 36px; font-weight: 700;
+            animation: blink 1s step-end infinite;
+        }
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+
+        #splash-screen .loading-text {
+            font-size: 14px; letter-spacing: 2px; text-transform: uppercase;
+            opacity: 0.8; font-weight: 600;
+        }
+        #splash-screen .loading-text span {
+            display: inline-block;
+            animation: dotJump 1.4s infinite ease-in-out both;
+        }
+        #splash-screen .loading-text span:nth-child(1) { animation-delay: -0.32s; }
+        #splash-screen .loading-text span:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes dotJump {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+
+        /* =================================================================
+           1. 原有 CSS 变量与样式
+           ================================================================= */
         :root {
             --bg-color: #f5f7fa;
             --text-color: #1e293b;
@@ -75,7 +157,6 @@
         }
         #themeToggle:hover { background: rgba(255, 255, 255, 0.25); }
 
-        /* Hero Banner */
         .hero-banner {
             position: relative; width: 100%; border-radius: 20px; overflow: hidden;
             margin-bottom: 30px; background: var(--card-bg); border: 1px solid var(--border-color);
@@ -109,7 +190,6 @@
         }
         .hero-banner .hero-content .play-hero-btn:hover { transform: scale(1.05); box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4); }
 
-        /* 过滤栏 */
         .filter-bar {
             display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 24px;
         }
@@ -123,7 +203,6 @@
             font-weight: 600;
         }
 
-        /* 工具栏 */
         .toolbar-container { display: flex; gap: 20px; margin-bottom: 10px; flex-wrap: wrap; }
         .toolbar { flex: 1; display: flex; gap: 16px; min-width: 200px; flex-wrap: wrap; }
         .toolbar .search-box {
@@ -144,7 +223,6 @@
         }
         .toolbar .random-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(59, 130, 246, 0.3); }
 
-        /* 排行 + 快速启动栏 */
         .rank-box {
             background: var(--card-bg); border: 1px solid var(--border-color);
             border-radius: 16px; padding: 16px 20px; min-width: 180px; flex: 0 0 240px; transition: background 0.3s;
@@ -157,7 +235,6 @@
         .rank-item:last-child { border-bottom: none; }
         .rank-item .rnum { font-weight: 700; color: #e11d48; width: 20px; }
 
-        /* 🟢 快速启动栏样式 */
         .quick-launch-list { display: flex; flex-direction: column; gap: 8px; }
         .quick-launch-item {
             display: flex; align-items: center; gap: 10px; padding: 8px 12px;
@@ -174,7 +251,6 @@
         }
         .quick-launch-item .ql-empty { color: var(--desc-color); font-size: 13px; padding: 8px 0; }
 
-        /* 容器与卡片 */
         .container { max-width: 1400px; margin: 0 auto; padding: 30px 20px; }
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 28px; }
         .game-card {
@@ -223,7 +299,6 @@
         .game-card .actions button.like-btn.liked { background: #d1fae5; border-color: #10b981; color: #047857; }
         .dark-mode .game-card .actions button.like-btn.liked { background: #064e3b; border-color: #10b981; color: #6ee7b7; }
 
-        /* 右下角按钮 */
         .fab-container { position: fixed; bottom: 30px; right: 30px; display: flex; flex-direction: column; gap: 12px; z-index: 999; }
         .fab-container .fab { width: 52px; height: 52px; border-radius: 50%; border: none; background: #1e293b; color: #fff; font-size: 20px; cursor: pointer; box-shadow: 0 6px 24px rgba(0, 0, 0, 0.20); transition: all 0.25s ease; display: flex; align-items: center; justify-content: center; position: relative; }
         .fab-container .fab:hover { transform: scale(1.08); background: #0f172a; }
@@ -232,6 +307,20 @@
         .fab-container .fab.top-fab { background: #2563eb; }
         .fab-container .fab.top-fab:hover { background: #1d4ed8; }
         .fab-container .fab .badge-count { position: absolute; top: -6px; right: -6px; background: #f59e0b; color: #fff; font-size: 11px; font-weight: 700; width: 22px; height: 22px; border-radius: 50%; display: none; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15); }
+
+        .recent-wrapper { display: flex; flex-direction: column; gap: 4px; align-items: center; }
+        .recent-wrapper .recent-games { display: flex; gap: 6px; }
+        .recent-wrapper .recent-games .recent-icon {
+            width: 32px; height: 32px; border-radius: 50%;
+            background: var(--input-bg); border: 1px solid var(--border-color);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px; color: var(--text-color);
+            cursor: pointer; transition: all 0.2s;
+        }
+        .recent-wrapper .recent-games .recent-icon:hover {
+            transform: scale(1.1); border-color: #60a5fa; background: var(--btn-hover);
+        }
+        .recent-wrapper .recent-label { font-size: 10px; color: var(--desc-color); text-align: center; }
 
         .toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); background: #1e293b; color: #fff; padding: 12px 28px; border-radius: 16px; font-size: 14px; font-weight: 500; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.20); z-index: 9999; opacity: 0; transition: 0.3s; pointer-events: none; }
         .toast.show { opacity: 1; transform: translateX(-50%) translateY(-8px); }
@@ -249,7 +338,6 @@
         .modal .favorite-list .fav-item .fav-link { color: #2563eb; font-size: 13px; cursor: pointer; }
         .modal .favorite-list .empty-msg { color: #94a3b8; text-align: center; padding: 30px 0; }
 
-        /* 🟢 底部统计看板 */
         .stats-dashboard {
             max-width: 1400px; margin: 40px auto 20px; padding: 0 20px;
             display: flex; flex-wrap: wrap; justify-content: center; gap: 30px;
@@ -263,7 +351,6 @@
         }
         .stats-dashboard .stat-item i { font-size: 20px; color: var(--desc-color); }
 
-        /* 底部技术栈 */
         .footer-tech {
             max-width: 1400px; margin: 20px auto 30px; padding: 0 20px;
             display: flex; flex-wrap: wrap; justify-content: center; gap: 16px;
@@ -289,6 +376,7 @@
             .toolbar-container { flex-direction: column; }
             .rank-box { flex: 1 1 auto; min-width: unset; }
             .footer-tech { gap: 12px; }
+            .recent-wrapper .recent-games .recent-icon { width: 28px; height: 28px; font-size: 12px; }
             .hero-banner .hero-content { padding: 20px; max-width: 80%; }
             .hero-banner .hero-content h2 { font-size: 22px; }
             .hero-banner .hero-content .play-hero-btn { padding: 10px 20px; font-size: 15px; }
@@ -298,6 +386,25 @@
     </style>
 </head>
 <body>
+
+    <!-- =================================================================
+       🟢 新增：启动画面 (Splash Screen)
+       ================================================================= -->
+    <div id="splash-screen">
+        <div class="hacker-loader">
+            <div class="ring"></div>
+            <div class="ring"></div>
+            <div class="ring"></div>
+            <div class="cursor">_</div>
+        </div>
+        <div class="loading-text">
+            INITIALIZING<span>.</span><span>.</span><span>.</span>
+        </div>
+    </div>
+
+    <!-- =================================================================
+       原有页面结构
+       ================================================================= -->
     <header class="navbar">
         <div>
             <h1><i class="fas fa-gamepad"></i> Godot 游戏合集 <span class="subtitle">· 基于 GitHub 构建</span></h1>
@@ -341,7 +448,6 @@
 
                 <div class="section-divider"></div>
 
-                <!-- 🟢 新增：快速启动栏 -->
                 <div class="section-title"><i class="fas fa-bolt"></i> 快速启动</div>
                 <div class="quick-launch-list" id="quickLaunchList">
                     <div class="ql-empty">暂无游玩记录</div>
@@ -358,7 +464,7 @@
         <div class="grid" id="gameGrid"></div>
     </main>
 
-    <!-- 🟢 新增：底部统计看板 -->
+    <!-- 统计看板 -->
     <div class="stats-dashboard" id="statsDashboard">
         <div class="stat-item"><i class="fas fa-play-circle"></i> 总游玩: <span class="stat-num" id="totalPlays">0</span> 次</div>
         <div class="stat-item"><i class="fas fa-thumbs-up"></i> 总点赞: <span class="stat-num" id="totalLikes">0</span> 次</div>
@@ -374,14 +480,12 @@
         <a href="https://www.netlify.com/" target="_blank" class="tech-btn"><i class="fas fa-cloud-upload-alt" style="color:#00ad9f;"></i> Netlify 托管</a>
     </div>
 
-        <!-- 右下角悬浮按钮 -->
+    <!-- 右下角悬浮菜单 -->
     <div class="fab-container">
-        <!-- 🟢 修复：加回这个缺失的最近游玩容器 -->
         <div class="recent-wrapper" id="recentWrapper">
             <div class="recent-games" id="recentGames"></div>
             <div class="recent-label">最近游玩</div>
         </div>
-
         <button class="fab fav-fab" id="openFavoritesBtn" title="查看我的收藏"><i class="fas fa-heart"></i><span class="badge-count" id="favBadge">0</span></button>
         <button class="fab top-fab" id="scrollTopBtn" title="回到顶部"><i class="fas fa-arrow-up"></i></button>
     </div>
@@ -488,8 +592,8 @@
             if(recent.length > 5) recent.pop();
             localStorage.setItem('godot_recent', JSON.stringify(recent));
             renderRecentGames();
-            renderQuickLaunch(); // 刷新快速启动
-            updateStats(); // 刷新统计数据
+            renderQuickLaunch();
+            updateStats();
         }
 
         // =================================================================
@@ -552,7 +656,7 @@
                     if(!error && data) {
                         data.forEach(row => {
                             likesMap[row.game_id] = row.like_count;
-                            totalLikes += row.like_count; // 计算总点赞
+                            totalLikes += row.like_count;
                         });
                     }
                 } catch(e) { /* 忽略错误 */ }
@@ -599,7 +703,7 @@
             grid.addEventListener('click', handleCardClick);
             renderRecentGames();
             renderQuickLaunch();
-            updateStats(totalLikes); // 更新底部统计面板
+            updateStats(totalLikes);
             updateHeroBanner(gameList);
         }
 
@@ -663,7 +767,6 @@
             }).join('');
         }
 
-        // 🟢 渲染快速启动栏
         function renderQuickLaunch() {
             const list = document.getElementById('quickLaunchList');
             const recentIds = JSON.parse(localStorage.getItem('godot_recent') || '[]').slice(0, 3);
@@ -674,7 +777,6 @@
             list.innerHTML = recentIds.map((id, index) => {
                 const game = getGameById(id);
                 if(!game) return '';
-                // 取游戏名称的第一个字作为图标
                 const iconChar = game.title.charAt(0);
                 return `
                     <div class="quick-launch-item" onclick="window.open('${game.gameUrl}', '_blank')">
@@ -685,7 +787,6 @@
             }).join('');
         }
 
-        // 🟢 更新底部统计面板
         function updateStats(likesFromSupabase = null) {
             let totalPlays = 0;
             let totalFavs = favorites.size;
@@ -695,7 +796,6 @@
             document.getElementById('totalFavs').textContent = totalFavs;
             document.getElementById('totalGames').textContent = GAMES_DATA.length;
 
-            // 如果从Supabase刷新了点赞数，使用传入的值
             if (likesFromSupabase !== null) {
                 document.getElementById('totalLikes').textContent = likesFromSupabase;
             }
@@ -743,7 +843,7 @@
             saveFavorites(); updateFavBadge();
             const btn = document.querySelector(`.favorite-btn[data-id="${id}"]`);
             if(btn) { const active = favorites.has(id); btn.classList.toggle('active', active); btn.innerHTML = `<i class="${active ? 'fas' : 'far'} fa-heart"></i> ${active ? '已收藏' : '收藏'}`; }
-            updateStats(); // 收藏变动后刷新统计
+            updateStats();
         }
 
         async function handleLike(id, btn) {
@@ -763,9 +863,7 @@
                     countSpan.textContent = data[0].like_count;
                     btn.classList.add('liked');
                     showToast('👍 感谢你的点赞！');
-                    // 刷新排行榜和统计
                     fetchAndRenderRank();
-                    // 重新计算总点赞数
                     const { data: allData } = await supabaseClient.from('game_stats').select('like_count');
                     if(allData) {
                         const total = allData.reduce((acc, row) => acc + row.like_count, 0);
@@ -869,14 +967,23 @@
         });
 
         // =================================================================
-        //  10. 初始化启动
+        //  10. 🟢 关键更改：初始化启动（自动隐藏启动画面）
         // =================================================================
         async function init() {
+            // 第一步：加载主题和收藏等轻量级数据
             loadTheme(); loadFavorites();
+
+            // 第二步：执行原有耗时操作
             renderFilterBar();
             await renderGames();
             updateFavBadge();
             fetchAndRenderRank();
+
+            // 第三步：等所有数据渲染完毕后，让启动画面“慢慢变淡消失”
+            const splash = document.getElementById('splash-screen');
+            setTimeout(() => {
+                splash.classList.add('hidden');
+            }, 500); // 短暂保留0.5秒，让用户看清渲染完毕的瞬间，然后缓缓淡出
         }
         if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
     </script>
