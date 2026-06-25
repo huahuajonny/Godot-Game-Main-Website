@@ -7,8 +7,7 @@
     "thumbnail": "https://huahuajonny.github.io/Godot-Game-Main-Website/images/Flappy bird.png",
     "gameUrl": "https://flappy-bird-evening.netlify.app/",
     "shareUrl": "https://flappy-bird-evening.netlify.app/",
-    "downloadUrl": "https://github.com/huahuajonny/Godot-Game-Main-Website/releases/download/v1.0.0/FlappyBird.zip",
-    "downloadSha256": "78171201682b53e68adab1329cbf02dde66b5e9616b0c9c1c7d0acd4ebb66c4a"
+    "downloadUrl": "https://wwapo.lanzouv.com/irbaY3sx7uda"
   },
   {
     "id": 2,
@@ -18,7 +17,7 @@
     "thumbnail": "https://huahuajonny.github.io/Godot-Game-Main-Website/images/Platform-Game-1.png",
     "gameUrl": "https://platform-game-1-2d.netlify.app/",
     "shareUrl": "https://platform-game-1-2d.netlify.app/",
-    "downloadUrl":""
+    "downloadUrl":"https://wwapo.lanzouv.com/iBBz93sx821g"
   },
   {
     "id": 3,
@@ -28,7 +27,7 @@
     "thumbnail": "https://huahuajonny.github.io/Godot-Game-Main-Website/images/Platform-Game-2.png",
     "gameUrl": "https://platform-game-2-2d.netlify.app/",
     "shareUrl": "https://platform-game-2-2d.netlify.app/",
-    "downloadUrl":""
+    "downloadUrl":"https://wwapo.lanzouv.com/iJqiv3sx829e"
 
   },
   {
@@ -39,6 +38,6 @@
     "thumbnail": "https://huahuajonny.github.io/Godot-Game-Main-Website/images/Fox-Shotting-Game.png",
     "gameUrl": "https://fox-shotting-game.netlify.app/",
     "shareUrl": "https://fox-shotting-game.netlify.app/",
-    "downloadUrl":""
+    "downloadUrl":"https://wwapo.lanzouv.com/itqIY3sx81qf"
   }
 ]
