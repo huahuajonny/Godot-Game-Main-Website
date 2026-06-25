@@ -374,7 +374,14 @@
         <a href="https://www.netlify.com/" target="_blank" class="tech-btn"><i class="fas fa-cloud-upload-alt" style="color:#00ad9f;"></i> Netlify 托管</a>
     </div>
 
+        <!-- 右下角悬浮按钮 -->
     <div class="fab-container">
+        <!-- 🟢 修复：加回这个缺失的最近游玩容器 -->
+        <div class="recent-wrapper" id="recentWrapper">
+            <div class="recent-games" id="recentGames"></div>
+            <div class="recent-label">最近游玩</div>
+        </div>
+
         <button class="fab fav-fab" id="openFavoritesBtn" title="查看我的收藏"><i class="fas fa-heart"></i><span class="badge-count" id="favBadge">0</span></button>
         <button class="fab top-fab" id="scrollTopBtn" title="回到顶部"><i class="fas fa-arrow-up"></i></button>
     </div>
