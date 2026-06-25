@@ -4,6 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/x-icon" href="favicon.ico" />
+
+    <!-- 🟢 PWA 清单文件引用 -->
+    <link rel="manifest" href="manifest.json" />
+
     <title>Godot 游戏合集 - GitHub</title>
 
     <!-- Font Awesome 图标库 -->
@@ -104,7 +108,6 @@
         #themeToggle { background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); color: #fff; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; transition: all 0.3s; }
         #themeToggle:hover { background: rgba(255, 255, 255, 0.25); }
 
-        /* 投票看板 */
         .vote-board {
             display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px;
             margin-bottom: 30px; padding: 20px 24px;
@@ -183,7 +186,6 @@
         .game-card .play-count { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--desc-color); padding-bottom: 10px; border-bottom: 1px solid var(--border-color); margin-bottom: 10px; }
         .game-card .play-count i { color: #60a5fa; font-size: 14px; }
 
-        /* 游玩按钮与下载按钮区域 */
         .game-card .action-wrapper { display: flex; flex-direction: column; gap: 8px; padding-bottom: 12px; }
         .game-card .action-wrapper .btn-block { display: block; width: 100%; padding: 12px 0; border: none; border-radius: 12px; font-size: 16px; font-weight: 700; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; text-align: center; text-decoration: none; }
         .game-card .action-wrapper .start-game-btn { background: linear-gradient(135deg, #34d399, #10b981); color: #fff; }
@@ -240,7 +242,6 @@
         .modal .favorite-list .fav-item .fav-link { color: #2563eb; font-size: 13px; cursor: pointer; }
         .modal .favorite-list .empty-msg { color: #94a3b8; text-align: center; padding: 30px 0; }
 
-        /* 🟢 底部年度票数榜 */
         .stats-dashboard { max-width: 1400px; margin: 40px auto 20px; padding: 0 20px; display: flex; flex-wrap: wrap; justify-content: center; gap: 30px; }
         .stats-dashboard .stat-item { display: flex; align-items: center; gap: 10px; font-size: 15px; color: var(--text-color); }
         .stats-dashboard .stat-item .stat-num { font-weight: 700; font-size: 20px; color: #60a5fa; }
@@ -491,7 +492,6 @@
             });
         }
 
-        // 🟢 核心渲染函数，加入了下载按钮
         async function renderGames(gameList = GAMES_DATA) {
             const grid = document.getElementById('gameGrid');
             grid.innerHTML = '';
@@ -522,8 +522,6 @@
                 else { thumbDiv.innerHTML = getThumbnailPlaceholder(game.title); }
 
                 const body = document.createElement('div'); body.className = 'body';
-
-                // 生成下载按钮的 HTML（只有当 downloadUrl 存在且不为空时才显示）
                 const downloadHtml = game.downloadUrl
                     ? `<a href="${game.downloadUrl}" class="btn-block download-btn" download><i class="fas fa-download"></i> 下载游戏 (.exe)</a>`
                     : '';
@@ -533,14 +531,12 @@
                     <div class="tags">${tagsHtml}</div>
                     <div class="description">${game.description}</div>
                     <div class="play-count"><i class="fas fa-user"></i> ${playCount} 次游玩</div>
-
                     <div class="action-wrapper">
                         <button class="btn-block start-game-btn" data-id="${game.id}">
                             <i class="fas fa-play"></i> 开始游戏
                         </button>
                         ${downloadHtml}
                     </div>
-
                     <div class="actions">
                         <button class="share-btn" data-id="${game.id}"><i class="fas fa-share-alt"></i> 分享</button>
                         <button class="comment-btn" data-id="${game.id}"><i class="fas fa-comment"></i> 评论</button>
@@ -787,6 +783,17 @@
             setTimeout(() => { splash.classList.add('hidden'); }, 600);
         }
         if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+
+        // =================================================================
+        //  12. 🟢 注册 PWA 离线支持 (新增的部分)
+        // =================================================================
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/Godot-Game-Main-Website/sw.js')
+                    .then(registration => console.log('PWA ServiceWorker 注册成功:', registration.scope))
+                    .catch(error => console.log('PWA ServiceWorker 注册失败:', error));
+            });
+        }
     </script>
 </body>
 </html>
