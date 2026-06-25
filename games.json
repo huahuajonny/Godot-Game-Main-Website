@@ -1,12 +1,14 @@
 [
-  {
+ {
     "id": 1,
     "title": "Flappy Bird",
-    "description": "按下空格键开始游戏，不要碰到管道。已更新背景切换功能！",
+    "description": "按下空格键开始游戏。已更新背景切换功能！",
     "tags": ["休闲", "反应"],
     "thumbnail": "https://huahuajonny.github.io/Godot-Game-Main-Website/images/Flappy bird.png",
     "gameUrl": "https://flappy-bird-evening.netlify.app/",
-    "shareUrl": "https://flappy-bird-evening.netlify.app/"
+    "shareUrl": "https://flappy-bird-evening.netlify.app/",
+    "downloadUrl": "https://github.com/huahuajonny/Godot-Game-Main-Website/releases/download/v1.0.0/FlappyBird.zip",
+    "downloadSha256": "78171201682b53e68adab1329cbf02dde66b5e9616b0c9c1c7d0acd4ebb66c4a"
   },
   {
     "id": 2,
@@ -15,7 +17,8 @@
     "tags": ["平台跳跃", "入门", "挑战", "动作"],
     "thumbnail": "https://huahuajonny.github.io/Godot-Game-Main-Website/images/Platform-Game-1.png",
     "gameUrl": "https://platform-game-1-2d.netlify.app/",
-    "shareUrl": "https://platform-game-1-2d.netlify.app/"
+    "shareUrl": "https://platform-game-1-2d.netlify.app/",
+    "downloadUrl":""
   },
   {
     "id": 3,
@@ -24,7 +27,9 @@
     "tags": ["平台跳跃", "进阶", "挑战", "动作"],
     "thumbnail": "https://huahuajonny.github.io/Godot-Game-Main-Website/images/Platform-Game-2.png",
     "gameUrl": "https://platform-game-2-2d.netlify.app/",
-    "shareUrl": "https://platform-game-2-2d.netlify.app/"
+    "shareUrl": "https://platform-game-2-2d.netlify.app/",
+    "downloadUrl":""
+
   },
   {
     "id": 4,
@@ -33,6 +38,7 @@
     "tags": ["射击"],
     "thumbnail": "https://huahuajonny.github.io/Godot-Game-Main-Website/images/Fox-Shotting-Game.png",
     "gameUrl": "https://fox-shotting-game.netlify.app/",
-    "shareUrl": "https://fox-shotting-game.netlify.app/"
+    "shareUrl": "https://fox-shotting-game.netlify.app/",
+    "downloadUrl":""
   }
 ]

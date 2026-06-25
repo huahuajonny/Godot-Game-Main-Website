@@ -104,29 +104,18 @@
         #themeToggle { background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); color: #fff; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; transition: all 0.3s; }
         #themeToggle:hover { background: rgba(255, 255, 255, 0.25); }
 
-        /* 🟢 顶部投票看板 */
+        /* 投票看板 */
         .vote-board {
             display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px;
             margin-bottom: 30px; padding: 20px 24px;
             background: var(--card-bg); border: 1px solid var(--border-color);
             border-radius: 20px; box-shadow: var(--card-shadow); transition: background 0.3s;
         }
-        .vote-board h2 {
-            width: 100%; font-size: 20px; font-weight: 700; margin-bottom: 8px; display: flex; align-items: center; gap: 8px;
-            color: var(--text-color);
-        }
-        .vote-board .vote-item {
-            flex: 1; min-width: 120px; display: flex; flex-direction: column; align-items: center;
-            padding: 12px 8px; background: var(--input-bg); border-radius: 16px;
-            border: 2px solid transparent; transition: all 0.3s;
-        }
+        .vote-board h2 { width: 100%; font-size: 20px; font-weight: 700; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; color: var(--text-color); }
+        .vote-board .vote-item { flex: 1; min-width: 120px; display: flex; flex-direction: column; align-items: center; padding: 12px 8px; background: var(--input-bg); border-radius: 16px; border: 2px solid transparent; transition: all 0.3s; }
         .vote-board .vote-item .vote-title { font-weight: 600; font-size: 15px; margin-bottom: 6px; }
         .vote-board .vote-item .vote-score { font-size: 24px; font-weight: 700; color: #60a5fa; margin-bottom: 8px; }
-        .vote-board .vote-item .vote-btn {
-            background: linear-gradient(135deg, #f59e0b, #d97706); color: #fff; border: none;
-            padding: 6px 16px; border-radius: 50px; font-size: 14px; font-weight: 600; cursor: pointer;
-            transition: all 0.5s ease; width: 100%;
-        }
+        .vote-board .vote-item .vote-btn { background: linear-gradient(135deg, #f59e0b, #d97706); color: #fff; border: none; padding: 6px 16px; border-radius: 50px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.5s ease; width: 100%; }
         .vote-board .vote-item .vote-btn:hover:not(:disabled) { transform: scale(1.05); box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3); }
         .vote-board .vote-item .vote-btn:disabled { background: #94a3b8; cursor: not-allowed; opacity: 0; transform: scale(0.8); pointer-events: none; }
 
@@ -183,15 +172,7 @@
 
         .game-card .body .title { font-size: 18px; font-weight: 700; margin-bottom: 6px; color: var(--text-color); display: flex; align-items: center; justify-content: space-between; }
         .game-card .body .title .badge { font-size: 11px; background: var(--badge-bg); color: var(--badge-color); padding: 2px 10px; border-radius: 20px; font-weight: 600; }
-
-        /* 🟢 年度最佳徽章 */
-        .game-card .champion-badge {
-            position: absolute; top: 12px; right: 12px; z-index: 10;
-            background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #78350f;
-            padding: 4px 12px; border-radius: 50px; font-size: 13px; font-weight: 700;
-            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.5); display: none;
-            pointer-events: none; backdrop-filter: blur(4px);
-        }
+        .game-card .champion-badge { position: absolute; top: 12px; right: 12px; z-index: 10; background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #78350f; padding: 4px 12px; border-radius: 50px; font-size: 13px; font-weight: 700; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.5); display: none; pointer-events: none; backdrop-filter: blur(4px); }
         .game-card.champion .champion-badge { display: block; }
         .game-card.champion .thumbnail { border: 3px solid #fbbf24; }
 
@@ -202,9 +183,18 @@
         .game-card .play-count { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--desc-color); padding-bottom: 10px; border-bottom: 1px solid var(--border-color); margin-bottom: 10px; }
         .game-card .play-count i { color: #60a5fa; font-size: 14px; }
 
-        .game-card .start-btn-wrapper { padding: 0 0 12px 0; }
-        .game-card .start-btn-wrapper .start-game-btn { display: block; width: 100%; padding: 12px 0; background: linear-gradient(135deg, #34d399, #10b981); color: #fff; border: none; border-radius: 12px; font-size: 16px; font-weight: 700; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; text-align: center; }
-        .game-card .start-btn-wrapper .start-game-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4); }
+        /* 游玩按钮与下载按钮区域 */
+        .game-card .action-wrapper { display: flex; flex-direction: column; gap: 8px; padding-bottom: 12px; }
+        .game-card .action-wrapper .btn-block { display: block; width: 100%; padding: 12px 0; border: none; border-radius: 12px; font-size: 16px; font-weight: 700; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; text-align: center; text-decoration: none; }
+        .game-card .action-wrapper .start-game-btn { background: linear-gradient(135deg, #34d399, #10b981); color: #fff; }
+        .game-card .action-wrapper .start-game-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4); }
+
+        .game-card .action-wrapper .download-btn {
+            background: var(--input-bg); color: var(--text-color); border: 1px solid var(--border-color);
+        }
+        .game-card .action-wrapper .download-btn:hover {
+            background: var(--btn-hover); border-color: #60a5fa; transform: translateY(-2px);
+        }
 
         .game-card .actions { display: flex; gap: 10px; flex-wrap: wrap; border-top: 1px solid var(--border-color); padding-top: 14px; margin-top: 4px; align-items: center; }
         .game-card .actions button { flex: 1; min-width: 50px; padding: 8px 8px; border: none; border-radius: 12px; font-size: 13px; font-weight: 600; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 6px; background: var(--input-bg); color: var(--text-color); border: 1px solid var(--border-color); }
@@ -251,29 +241,15 @@
         .modal .favorite-list .empty-msg { color: #94a3b8; text-align: center; padding: 30px 0; }
 
         /* 🟢 底部年度票数榜 */
-        .stats-dashboard {
-            max-width: 1400px; margin: 40px auto 20px; padding: 0 20px;
-            display: flex; flex-wrap: wrap; justify-content: center; gap: 30px;
-        }
+        .stats-dashboard { max-width: 1400px; margin: 40px auto 20px; padding: 0 20px; display: flex; flex-wrap: wrap; justify-content: center; gap: 30px; }
         .stats-dashboard .stat-item { display: flex; align-items: center; gap: 10px; font-size: 15px; color: var(--text-color); }
         .stats-dashboard .stat-item .stat-num { font-weight: 700; font-size: 20px; color: #60a5fa; }
         .stats-dashboard .stat-item i { font-size: 20px; color: var(--desc-color); }
 
-        .vote-leaderboard {
-            max-width: 1400px; margin: 10px auto 20px; padding: 0 20px;
-            background: var(--card-bg); border: 1px solid var(--border-color);
-            border-radius: 20px; padding: 20px 24px; box-shadow: var(--card-shadow);
-            transition: background 0.3s; display: flex; flex-wrap: wrap; align-items: center; gap: 20px;
-        }
+        .vote-leaderboard { max-width: 1400px; margin: 10px auto 20px; padding: 0 20px; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 20px; padding: 20px 24px; box-shadow: var(--card-shadow); transition: background 0.3s; display: flex; flex-wrap: wrap; align-items: center; gap: 20px; }
         .vote-leaderboard h3 { font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 8px; color: var(--text-color); margin: 0; }
-        .vote-leaderboard .leaderboard-content {
-            display: flex; flex: 1; flex-wrap: wrap; justify-content: space-evenly; gap: 12px;
-        }
-        .vote-leaderboard .lb-item {
-            display: flex; align-items: center; gap: 6px; font-size: 14px;
-            background: var(--input-bg); padding: 4px 12px; border-radius: 50px;
-            border: 1px solid transparent; transition: border-color 0.2s;
-        }
+        .vote-leaderboard .leaderboard-content { display: flex; flex: 1; flex-wrap: wrap; justify-content: space-evenly; gap: 12px; }
+        .vote-leaderboard .lb-item { display: flex; align-items: center; gap: 6px; font-size: 14px; background: var(--input-bg); padding: 4px 12px; border-radius: 50px; border: 1px solid transparent; transition: border-color 0.2s; }
         .vote-leaderboard .lb-item .lb-name { font-weight: 600; }
         .vote-leaderboard .lb-item .lb-score { font-weight: 700; color: #f59e0b; }
 
@@ -328,10 +304,9 @@
 
     <main class="container">
 
-        <!-- 🟢 年度投票看板 -->
+        <!-- 年度投票看板 -->
         <div class="vote-board" id="voteBoard">
             <h2><i class="fas fa-vote-yea" style="color: #f59e0b;"></i> 2026 年度最佳 Godot 游戏评选</h2>
-            <!-- 由 JavaScript 生成 -->
         </div>
 
         <!-- Hero Banner -->
@@ -349,10 +324,7 @@
         <!-- 工具栏 -->
         <div class="toolbar-container">
             <div class="toolbar">
-                <div class="search-box">
-                    <i class="fas fa-search"></i>
-                    <input type="text" id="searchInput" placeholder="搜索游戏名称或描述..." />
-                </div>
+                <div class="search-box"><i class="fas fa-search"></i><input type="text" id="searchInput" placeholder="搜索游戏名称或描述..." /></div>
                 <button class="random-btn" id="randomBtn"><i class="fas fa-dice"></i> 随机一个游戏</button>
             </div>
             <div class="rank-box" id="rankBox">
@@ -373,12 +345,10 @@
         <div class="grid" id="gameGrid"></div>
     </main>
 
-    <!-- 🟢 底部年度票数榜 -->
+    <!-- 底部年度票数榜 -->
     <div class="vote-leaderboard" id="voteLeaderboard">
         <h3><i class="fas fa-trophy" style="color: #f59e0b;"></i> 🏆 年度票数榜</h3>
-        <div class="leaderboard-content" id="leaderboardContent">
-            加载票数中...
-        </div>
+        <div class="leaderboard-content" id="leaderboardContent">加载票数中...</div>
     </div>
 
     <!-- 数据看板 -->
@@ -425,7 +395,7 @@
 
     <script>
         // =================================================================
-        //  1. 配置区（已从 index.html 剥离，改为动态获取 games.json）
+        //  1. 配置区（数据源已改为 games.json）
         // =================================================================
         const SUPABASE_URL = 'https://wxsypcfwplnxfccwopno.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind4c3lwY2Z3cGxueGZjY3dvcG5vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyNzAwNTEsImV4cCI6MjA5Nzg0NjA1MX0.31axDCFZT3irWEO1nYbBXvHQfE3_P-2sK2Zlnl-feYg';
@@ -437,7 +407,7 @@
         let isLiking = false;
         let currentTag = 'all';
         let currentKeyword = '';
-        let GAMES_DATA = []; // 初始化为空，等待 fetch 填充
+        let GAMES_DATA = [];
 
         // 本地存储
         function loadFavorites() { try { const raw = localStorage.getItem('godot_favorites'); if(raw) favorites = new Set(JSON.parse(raw)); } catch (_) {} }
@@ -485,7 +455,6 @@
             renderGames(filtered);
         }
 
-        // 🟢 渲染投票看板
         function renderVoteBoard(votesMap) {
             const board = document.getElementById('voteBoard');
             let html = `<h2><i class="fas fa-vote-yea" style="color: #f59e0b;"></i> 2026 年度最佳 Godot 游戏评选</h2>`;
@@ -508,19 +477,13 @@
                 btn.addEventListener('click', async function() {
                     const id = parseInt(this.dataset.id);
                     if(localStorage.getItem(`voted_${id}`) === 'true') return;
-
-                    // 更新云端
                     try {
-                        const { data, error } = await supabaseClient
-                            .from('game_votes')
-                            .upsert({ game_id: id, vote_count: 1 }, { onConflict: 'game_id' });
-
+                        const { data, error } = await supabaseClient.from('game_votes').upsert({ game_id: id, vote_count: 1 }, { onConflict: 'game_id' });
                         if(!error) {
                             localStorage.setItem(`voted_${id}`, 'true');
                             showToast('✅ 投票成功！感谢你的参与！');
                             this.textContent = '已投票';
                             this.disabled = true;
-                            // 刷新总数据
                             fetchAllData();
                         }
                     } catch(e) { showToast('⚠️ 投票网络异常，请重试'); }
@@ -528,6 +491,7 @@
             });
         }
 
+        // 🟢 核心渲染函数，加入了下载按钮
         async function renderGames(gameList = GAMES_DATA) {
             const grid = document.getElementById('gameGrid');
             grid.innerHTML = '';
@@ -558,12 +522,25 @@
                 else { thumbDiv.innerHTML = getThumbnailPlaceholder(game.title); }
 
                 const body = document.createElement('div'); body.className = 'body';
+
+                // 生成下载按钮的 HTML（只有当 downloadUrl 存在且不为空时才显示）
+                const downloadHtml = game.downloadUrl
+                    ? `<a href="${game.downloadUrl}" class="btn-block download-btn" download><i class="fas fa-download"></i> 下载游戏 (.exe)</a>`
+                    : '';
+
                 body.innerHTML = `
                     <div class="title">${game.title}<span class="badge">Godot</span></div>
                     <div class="tags">${tagsHtml}</div>
                     <div class="description">${game.description}</div>
                     <div class="play-count"><i class="fas fa-user"></i> ${playCount} 次游玩</div>
-                    <div class="start-btn-wrapper"><button class="start-game-btn" data-id="${game.id}"><i class="fas fa-play"></i> 开始游戏</button></div>
+
+                    <div class="action-wrapper">
+                        <button class="btn-block start-game-btn" data-id="${game.id}">
+                            <i class="fas fa-play"></i> 开始游戏
+                        </button>
+                        ${downloadHtml}
+                    </div>
+
                     <div class="actions">
                         <button class="share-btn" data-id="${game.id}"><i class="fas fa-share-alt"></i> 分享</button>
                         <button class="comment-btn" data-id="${game.id}"><i class="fas fa-comment"></i> 评论</button>
@@ -633,7 +610,6 @@
             if (likesFromSupabase !== null) document.getElementById('totalLikes').textContent = likesFromSupabase;
         }
 
-        // 🟢 渲染底部票数榜
         function renderLeaderboard(votesMap) {
             const container = document.getElementById('leaderboardContent');
             const sorted = Object.keys(votesMap).sort((a, b) => votesMap[b] - votesMap[a]);
@@ -646,7 +622,6 @@
         }
 
         async function fetchAllData() {
-            // 获取游戏投票数据
             let votesMap = {};
             if (supabaseClient) {
                 try {
@@ -656,7 +631,6 @@
             }
             renderVoteBoard(votesMap);
             renderLeaderboard(votesMap);
-            // 重新渲染卡片（包含冠军判定）
             applyFilters();
         }
 
@@ -783,15 +757,13 @@
             if(container.innerHTML.trim() !== '') { document.getElementById('commentModal').classList.remove('open'); container.innerHTML = ''; showToast('🌙 主题已切换，请重新点击评论加载'); }
         });
 
-        // 🟢 全新初始化流程：先拉取外部 JSON，再启动渲染
         async function loadGameData() {
             try {
                 const response = await fetch('games.json');
                 if (response.ok) {
                     const json = await response.json();
-                    GAMES_DATA = json; // 成功从 json 读取
+                    GAMES_DATA = json;
                 } else {
-                    // 如果 json 没读到，使用内置的默认备用数据，防止白屏
                     console.warn('games.json 读取失败，使用内置备用数据');
                     GAMES_DATA = [
                         { id: 1, title: 'Flappy Bird', description: '备用数据', tags: ['休闲'], thumbnail: '', gameUrl: '#', shareUrl: '#' },
@@ -800,18 +772,16 @@
                         { id: 4, title: 'Fox Shotting Game', description: '备用数据', tags: ['射击'], thumbnail: '', gameUrl: '#', shareUrl: '#' }
                     ];
                 }
-            } catch (e) {
-                GAMES_DATA = []; // 极端情况，置空
-            }
+            } catch (e) { GAMES_DATA = []; }
         }
 
         async function init() {
-            await loadGameData(); // 1. 先加载外部游戏数据
+            await loadGameData();
             loadTheme(); loadFavorites();
-            renderFilterBar();    // 2. 渲染标签栏（依赖 GAMES_DATA）
-            await fetchAllData(); // 3. 同时获取投票、卡片、和Banner（依赖 GAMES_DATA）
+            renderFilterBar();
+            await fetchAllData();
             updateFavBadge();
-            fetchAndRenderRank(); // 4. 加载评论热度排行榜
+            fetchAndRenderRank();
 
             const splash = document.getElementById('splash-screen');
             setTimeout(() => { splash.classList.add('hidden'); }, 600);
