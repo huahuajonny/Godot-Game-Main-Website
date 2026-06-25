@@ -424,24 +424,9 @@
     <div class="toast" id="toast"></div>
 
     <script>
-        const GAMES_DATA = [{
-            id: 1, title: 'Flappy Bird', description: '按下空格键开始游戏，不要碰到管道。已更新背景切换功能！', tags: ['休闲', '反应'],
-            thumbnail: 'https://huahuajonny.github.io/Godot-Game-Main-Website/images/Flappy bird.png',
-            gameUrl: 'https://flappy-bird-evening.netlify.app/', shareUrl: 'https://flappy-bird-evening.netlify.app/'
-        }, {
-            id: 2, title: 'Platform-Game-1', description: 'Enter键，空格键跳跃；左方向键和右方向键控制方向', tags: ['平台跳跃', '入门', '挑战', '动作'],
-            thumbnail: 'https://huahuajonny.github.io/Godot-Game-Main-Website/images/Platform-Game-1.png',
-            gameUrl: 'https://platform-game-1-2d.netlify.app/', shareUrl: 'https://platform-game-1-2d.netlify.app/'
-        }, {
-            id: 3, title: 'Platform-Game-2', description: 'Enter键，空格键,向上键跳跃；蘑菇增强跳跃；ESC暂停', tags: ['平台跳跃', '进阶', '挑战', '动作'],
-            thumbnail: 'https://huahuajonny.github.io/Godot-Game-Main-Website/images/Platform-Game-2.png',
-            gameUrl: 'https://platform-game-2-2d.netlify.app/', shareUrl: 'https://platform-game-2-2d.netlify.app/'
-        }, {
-            id: 4, title: 'Fox Shotting Game', description: 'WASD控制狐狸行动方向，不断击退敌人，挑战高分', tags: ['射击'],
-            thumbnail: 'https://huahuajonny.github.io/Godot-Game-Main-Website/images/Fox-Shotting-Game.png',
-            gameUrl: 'https://fox-shotting-game.netlify.app/', shareUrl: 'https://fox-shotting-game.netlify.app/'
-        }];
-
+        // =================================================================
+        //  1. 配置区（已从 index.html 剥离，改为动态获取 games.json）
+        // =================================================================
         const SUPABASE_URL = 'https://wxsypcfwplnxfccwopno.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind4c3lwY2Z3cGxueGZjY3dvcG5vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyNzAwNTEsImV4cCI6MjA5Nzg0NjA1MX0.31axDCFZT3irWEO1nYbBXvHQfE3_P-2sK2Zlnl-feYg';
 
@@ -452,6 +437,7 @@
         let isLiking = false;
         let currentTag = 'all';
         let currentKeyword = '';
+        let GAMES_DATA = []; // 初始化为空，等待 fetch 填充
 
         // 本地存储
         function loadFavorites() { try { const raw = localStorage.getItem('godot_favorites'); if(raw) favorites = new Set(JSON.parse(raw)); } catch (_) {} }
@@ -797,12 +783,35 @@
             if(container.innerHTML.trim() !== '') { document.getElementById('commentModal').classList.remove('open'); container.innerHTML = ''; showToast('🌙 主题已切换，请重新点击评论加载'); }
         });
 
+        // 🟢 全新初始化流程：先拉取外部 JSON，再启动渲染
+        async function loadGameData() {
+            try {
+                const response = await fetch('games.json');
+                if (response.ok) {
+                    const json = await response.json();
+                    GAMES_DATA = json; // 成功从 json 读取
+                } else {
+                    // 如果 json 没读到，使用内置的默认备用数据，防止白屏
+                    console.warn('games.json 读取失败，使用内置备用数据');
+                    GAMES_DATA = [
+                        { id: 1, title: 'Flappy Bird', description: '备用数据', tags: ['休闲'], thumbnail: '', gameUrl: '#', shareUrl: '#' },
+                        { id: 2, title: 'Platform-Game-1', description: '备用数据', tags: ['平台跳跃'], thumbnail: '', gameUrl: '#', shareUrl: '#' },
+                        { id: 3, title: 'Platform-Game-2', description: '备用数据', tags: ['平台跳跃'], thumbnail: '', gameUrl: '#', shareUrl: '#' },
+                        { id: 4, title: 'Fox Shotting Game', description: '备用数据', tags: ['射击'], thumbnail: '', gameUrl: '#', shareUrl: '#' }
+                    ];
+                }
+            } catch (e) {
+                GAMES_DATA = []; // 极端情况，置空
+            }
+        }
+
         async function init() {
+            await loadGameData(); // 1. 先加载外部游戏数据
             loadTheme(); loadFavorites();
-            renderFilterBar();
-            await fetchAllData(); // 同时获取投票、卡片、和Banner
+            renderFilterBar();    // 2. 渲染标签栏（依赖 GAMES_DATA）
+            await fetchAllData(); // 3. 同时获取投票、卡片、和Banner（依赖 GAMES_DATA）
             updateFavBadge();
-            fetchAndRenderRank();
+            fetchAndRenderRank(); // 4. 加载评论热度排行榜
 
             const splash = document.getElementById('splash-screen');
             setTimeout(() => { splash.classList.add('hidden'); }, 600);
