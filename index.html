@@ -165,7 +165,6 @@
         .modal-game .fallback-box button { margin-top: 20px; padding: 12px 24px; background: #2563eb; color: #fff; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; }
         .modal-game .fallback-box button:hover { background: #1d4ed8; }
 
-        /* 原有模态框保留 */
         .modal-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.60); backdrop-filter: blur(6px); z-index: 1000; display: none; align-items: center; justify-content: center; padding: 20px; animation: fadeIn 0.25s ease; }
         .modal-overlay.open { display: flex; }
         .modal { background: var(--modal-bg); border-radius: 24px; max-width: 800px; width: 100%; max-height: 80vh; overflow-y: auto; padding: 28px 32px 32px; box-shadow: 0 40px 80px rgba(0, 0, 0, 0.30); animation: slideUp 0.30s ease; position: relative; transition: background 0.3s; border: 1px solid var(--border-color); }
@@ -411,7 +410,6 @@
             });
         }
 
-        // 🟢 整合排序与筛选
         function applyFiltersAndSort() {
             let filtered = GAMES_DATA;
             if (currentTag !== 'all') filtered = filtered.filter(g => g.tags && g.tags.includes(currentTag));
@@ -469,7 +467,7 @@
             });
         }
 
-        // 🟢 终极修复：含 URL 编码处理与静默回退的渲染函数
+        // 🟢 终极修复：MP4 视频悬停预览渲染函数
         async function renderGames(gameList = GAMES_DATA) {
             const grid = document.getElementById('gameGrid');
             grid.innerHTML = '';
@@ -497,39 +495,55 @@
                 const card = document.createElement('div'); card.className = 'game-card'; card.dataset.id = game.id;
                 const thumbDiv = document.createElement('div'); thumbDiv.className = 'thumbnail';
 
-                // 🟢 修复：自动对 GIF 链接进行 URL 转码，完美解决空格引起的加载失败！
+                // 🟢 替换为 MP4 视频逻辑
                 const staticImg = game.thumbnail || '';
-                const gifImg = game.gifPreview ? encodeURI(game.gifPreview.trim()) : '';
+                const previewMp4 = game.videoPreview ? encodeURI(game.videoPreview.trim()) : '';
 
                 if (!staticImg) {
                     thumbDiv.innerHTML = getThumbnailPlaceholder(game.title);
                 } else {
+                    const wrapper = document.createElement('div');
+                    wrapper.style.cssText = 'width: 100%; height: 100%; position: relative; overflow: hidden;';
+
+                    // 1. 创建静态图片
                     const img = document.createElement('img');
                     img.src = staticImg;
                     img.alt = game.title;
+                    img.style.cssText = 'width: 100%; height: 100%; object-fit: cover; transition: opacity 0.3s; position: absolute; inset: 0; z-index: 1;';
                     img.loading = 'lazy';
-
-                    // 🟢 修复：如果 GIF 加载失败，静默地回退到静态图片，绝不显示颜色方块！
                     img.onerror = function() {
-                        if (this.src !== staticImg) {
-                            this.src = staticImg;
-                        }
+                        wrapper.innerHTML = getThumbnailPlaceholder(game.title);
                     };
+                    wrapper.appendChild(img);
 
-                    // 绑定悬停切换
-                    if (gifImg) {
-                        img.addEventListener('mouseenter', function() {
-                            if (this.src !== gifImg) {
-                                this.src = gifImg;
-                            }
+                    // 2. 如果有 MP4 预览，创建视频
+                    if (previewMp4) {
+                        const video = document.createElement('video');
+                        video.src = previewMp4;
+                        video.muted = true;
+                        video.loop = true;
+                        video.playsInline = true;
+                        video.style.cssText = 'width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 0.3s; position: absolute; inset: 0; z-index: 0; background: #000;';
+
+                        // 鼠标悬停：图片消失，视频播放
+                        // 鼠标悬停：图片消失，视频播放
+                        wrapper.addEventListener('mouseenter', () => {
+                            img.style.opacity = '0';
+                            video.style.opacity = '1';
+                            video.currentTime = 0; // 🟢 核心修复：把播放进度强制重置到开头
+                            video.play().catch(() => {});
                         });
-                        img.addEventListener('mouseleave', function() {
-                            if (this.src !== staticImg) {
-                                this.src = staticImg;
-                            }
+
+                        // 鼠标移出：视频暂停，图片恢复
+                        wrapper.addEventListener('mouseleave', () => {
+                            video.style.opacity = '0';
+                            img.style.opacity = '1';
+                            video.pause();
                         });
+                        wrapper.appendChild(video);
                     }
-                    thumbDiv.appendChild(img);
+
+                    thumbDiv.appendChild(wrapper);
                 }
 
                 const body = document.createElement('div'); body.className = 'body';
