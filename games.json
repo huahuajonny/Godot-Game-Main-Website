@@ -5,7 +5,7 @@
     "description": "按下空格键开始游戏。已更新背景切换功能！",
     "tags": ["休闲", "反应"],
     "thumbnail": "https://huahuajonny.github.io/Godot-Game-Main-Website/images/Flappy bird.png",
-    "gifPreview": "https://huahuajonny.github.io/Godot-Game-Main-Website/images/Flappy Bird.gif",
+    "gifPreview": "https://huahuajonny.github.io/Godot-Game-Main-Website/images/Flappy-Bird.gif",
     "gameUrl": "https://flappy-bird-evening.netlify.app/",
     "shareUrl": "https://flappy-bird-evening.netlify.app/",
     "downloadUrl": "https://wwapo.lanzouv.com/irbaY3sx7uda"
@@ -16,7 +16,7 @@
     "description": "Enter键，空格键跳跃；左方向键和右方向键控制方向",
     "tags": ["平台跳跃", "入门", "挑战", "动作"],
     "thumbnail": "https://huahuajonny.github.io/Godot-Game-Main-Website/images/Platform-Game-1.png",
-    "gifPreview": "https://huahuajonny.github.io/Godot-Game-Main-Website/images/Platform Game 1.gif",
+    "gifPreview": "https://huahuajonny.github.io/Godot-Game-Main-Website/images/Platform-Game-1.gif",
     "gameUrl": "https://platform-game-1-2d.netlify.app/",
     "shareUrl": "https://platform-game-1-2d.netlify.app/",
     "downloadUrl": "https://wwapo.lanzouv.com/iBBz93sx821g"
@@ -27,7 +27,7 @@
     "description": "Enter键，空格键,向上键跳跃；蘑菇增强跳跃；ESC暂停",
     "tags": ["平台跳跃", "进阶", "挑战", "动作"],
     "thumbnail": "https://huahuajonny.github.io/Godot-Game-Main-Website/images/Platform-Game-2.png",
-    "gifPreview": "https://huahuajonny.github.io/Godot-Game-Main-Website/images/Platform Game 2.gif",
+    "gifPreview": "https://huahuajonny.github.io/Godot-Game-Main-Website/images/Platform-Game-2.gif",
     "gameUrl": "https://platform-game-2-2d.netlify.app/",
     "shareUrl": "https://platform-game-2-2d.netlify.app/",
     "downloadUrl": "https://wwapo.lanzouv.com/iJqiv3sx829e"
@@ -35,10 +35,10 @@
   {
     "id": 4,
     "title": "Fox Shotting Game",
-    "description": "WASD控制狐狸行动方向，不断击退敌人，挑战高分，进入上方小树林可以隐藏，移动式无法射击",
+    "description": "WASD控制狐狸行动方向，不断击退敌人，挑战高分",
     "tags": ["射击"],
     "thumbnail": "https://huahuajonny.github.io/Godot-Game-Main-Website/images/Fox-Shotting-Game.png",
-    "gifPreview": "https://huahuajonny.github.io/Godot-Game-Main-Website/images/Fow Shotting Game.gif",
+    "gifPreview": "https://huahuajonny.github.io/Godot-Game-Main-Website/images/Fox-Shotting-Game.gif",
     "gameUrl": "https://fox-shotting-game.netlify.app/",
     "shareUrl": "https://fox-shotting-game.netlify.app/",
     "downloadUrl": "https://wwapo.lanzouv.com/itqIY3sx81qf"
