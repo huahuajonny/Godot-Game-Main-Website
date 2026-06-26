@@ -35,7 +35,7 @@
   {
     "id": 4,
     "title": "Fox Shotting Game",
-    "description": "WASD控制狐狸行动方向，不断击退敌人，挑战高分",
+    "description": "WASD控制狐狸行动方向，不断击退敌人，挑战高分，进入上方小树林可以隐藏，移动式无法射击",
     "tags": ["射击"],
     "thumbnail": "https://huahuajonny.github.io/Godot-Game-Main-Website/images/Fox-Shotting-Game.png",
     "gifPreview": "https://huahuajonny.github.io/Godot-Game-Main-Website/images/Fow Shotting Game.gif",

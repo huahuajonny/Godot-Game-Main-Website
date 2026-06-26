@@ -4,7 +4,6 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/x-icon" href="favicon.ico" />
-    <link rel="manifest" href="manifest.json" />
     <title>Godot 游戏合集 - GitHub</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
@@ -68,7 +67,6 @@
         .filter-bar .filter-btn { padding: 6px 18px; border-radius: 50px; border: 1px solid var(--border-color); background: transparent; color: var(--text-color); font-size: 13px; cursor: pointer; transition: all 0.2s; }
         .filter-bar .filter-btn:hover, .filter-bar .filter-btn.active { background: var(--badge-bg); border-color: var(--badge-color); color: var(--badge-color); font-weight: 600; }
 
-        /* 🟢 新增：排序下拉框 */
         .toolbar-container { display: flex; gap: 20px; margin-bottom: 10px; flex-wrap: wrap; }
         .toolbar { flex: 1; display: flex; gap: 16px; min-width: 200px; flex-wrap: wrap; align-items: center; }
         .toolbar .search-box { flex: 1; min-width: 160px; display: flex; align-items: center; background: var(--input-bg); border: 1px solid var(--input-border); border-radius: 14px; padding: 0 16px; transition: border-color 0.2s; }
@@ -267,7 +265,6 @@
             <div class="toolbar">
                 <div class="search-box"><i class="fas fa-search"></i><input type="text" id="searchInput" placeholder="搜索游戏名称或描述..." /></div>
                 <button class="random-btn" id="randomBtn"><i class="fas fa-dice"></i> 随机一个游戏</button>
-                <!-- 🟢 新增：排序下拉框 -->
                 <select id="sortSelect" class="sort-select">
                     <option value="default">默认排序</option>
                     <option value="hot">热度最高 🔥</option>
@@ -341,7 +338,7 @@
         </div>
     </div>
 
-    <!-- 🟢 新增：内嵌游戏播放模态框 -->
+    <!-- 🟢 内嵌游戏播放模态框 -->
     <div class="modal-overlay" id="gameModal">
         <div class="modal modal-game">
             <div class="modal-header">
@@ -414,17 +411,14 @@
             });
         }
 
-        // 🟢 修正：整合排序与筛选
+        // 🟢 整合排序与筛选
         function applyFiltersAndSort() {
             let filtered = GAMES_DATA;
-            // 1. 标签筛选
             if (currentTag !== 'all') filtered = filtered.filter(g => g.tags && g.tags.includes(currentTag));
-            // 2. 搜索筛选
             if (currentKeyword.trim() !== '') {
                 const key = currentKeyword.toLowerCase();
                 filtered = filtered.filter(g => g.title.toLowerCase().includes(key) || g.description.toLowerCase().includes(key));
             }
-            // 3. 排序逻辑
             const sortValue = document.getElementById('sortSelect').value;
             let likesMap = {};
             if (supabaseClient) {
@@ -437,7 +431,6 @@
             } else if (sortValue === 'alpha') {
                 filtered.sort((a, b) => a.title.localeCompare(b.title));
             }
-            // 4. 渲染
             renderGames(filtered);
         }
 
@@ -476,6 +469,7 @@
             });
         }
 
+        // 🟢 终极修复：含 URL 编码处理与静默回退的渲染函数
         async function renderGames(gameList = GAMES_DATA) {
             const grid = document.getElementById('gameGrid');
             grid.innerHTML = '';
@@ -502,8 +496,41 @@
 
                 const card = document.createElement('div'); card.className = 'game-card'; card.dataset.id = game.id;
                 const thumbDiv = document.createElement('div'); thumbDiv.className = 'thumbnail';
-                if (game.thumbnail) { thumbDiv.innerHTML = `<img src="${game.thumbnail}" alt="${game.title}" loading="lazy" onerror="this.parentElement.innerHTML='${getThumbnailPlaceholder(game.title)}'" />`; }
-                else { thumbDiv.innerHTML = getThumbnailPlaceholder(game.title); }
+
+                // 🟢 修复：自动对 GIF 链接进行 URL 转码，完美解决空格引起的加载失败！
+                const staticImg = game.thumbnail || '';
+                const gifImg = game.gifPreview ? encodeURI(game.gifPreview.trim()) : '';
+
+                if (!staticImg) {
+                    thumbDiv.innerHTML = getThumbnailPlaceholder(game.title);
+                } else {
+                    const img = document.createElement('img');
+                    img.src = staticImg;
+                    img.alt = game.title;
+                    img.loading = 'lazy';
+
+                    // 🟢 修复：如果 GIF 加载失败，静默地回退到静态图片，绝不显示颜色方块！
+                    img.onerror = function() {
+                        if (this.src !== staticImg) {
+                            this.src = staticImg;
+                        }
+                    };
+
+                    // 绑定悬停切换
+                    if (gifImg) {
+                        img.addEventListener('mouseenter', function() {
+                            if (this.src !== gifImg) {
+                                this.src = gifImg;
+                            }
+                        });
+                        img.addEventListener('mouseleave', function() {
+                            if (this.src !== staticImg) {
+                                this.src = staticImg;
+                            }
+                        });
+                    }
+                    thumbDiv.appendChild(img);
+                }
 
                 const body = document.createElement('div'); body.className = 'body';
                 const downloadHtml = game.downloadUrl
@@ -634,7 +661,6 @@
             else if(btn.classList.contains('start-game-btn')) handleStartGame(id);
         }
 
-        // 🟢 修改：内嵌播放 + 兜底方案
         function handleStartGame(id) {
             const game = getGameById(id);
             if(!game) return;
@@ -651,28 +677,20 @@
             const modalTitle = document.getElementById('gameModalTitle');
             const fallbackBox = document.getElementById('fallbackBox');
 
-            // 重置状态
             modalTitle.innerHTML = `<i class="fas fa-gamepad"></i> ${title || '游戏载入中...'}`;
             iframe.src = 'about:blank';
             fallbackBox.classList.remove('show');
             document.getElementById('fallbackOpenBtn').onclick = () => { window.open(url, '_blank'); closeGameModal(); };
 
-            // 显示模态框
             modal.classList.add('open');
 
-            // 加载游戏
             setTimeout(() => {
                 iframe.src = url;
             }, 300);
 
-            // 安全兜底：如果 8 秒后 iframe 还没加载出来，或者被 CORS 拦截，弹出提示
             setTimeout(() => {
-                // 简单的判断：浏览器如果卡在 about:blank 或者加载失败，可能就是安全策略问题
-                // 这里直接抛出可选择的界面
                 if (iframe.src === 'about:blank' || iframe.src.startsWith('about:')) {
-                    // 可能加载失败
                 }
-                // 交给用户去按兜底按钮
                 document.getElementById('fallbackOpenBtn').onclick = () => { window.open(url, '_blank'); closeGameModal(); };
             }, 8000);
         }
@@ -681,7 +699,6 @@
             const modal = document.getElementById('gameModal');
             const iframe = document.getElementById('gameIframe');
             modal.classList.remove('open');
-            // 关掉 iframe 可以释放内存和停止游戏进程
             setTimeout(() => { iframe.src = 'about:blank'; }, 200);
         }
 
@@ -790,34 +807,25 @@
             if(container.innerHTML.trim() !== '') { document.getElementById('commentModal').classList.remove('open'); container.innerHTML = ''; showToast('🌙 主题已切换，请重新点击评论加载'); }
         });
 
-        // 🟢 监听排序下拉框变化
         document.getElementById('sortSelect').addEventListener('change', function() {
             applyFiltersAndSort();
         });
 
-        // 🟢 功能2：键盘快捷键 1,2,3,4
         document.addEventListener('keydown', function(e) {
-            // 防止在输入框或者评论框里按数字键触发
             if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-
             const keyNum = parseInt(e.key);
             if (keyNum >= 1 && keyNum <= 9) {
-                // 获取当前屏幕上渲染出来的所有可见卡片
                 const visibleCards = document.querySelectorAll('#gameGrid .game-card');
                 const index = keyNum - 1;
                 if (index < visibleCards.length) {
                     const card = visibleCards[index];
                     const id = parseInt(card.dataset.id);
                     if (id) {
-                        // 触发游戏启动
                         const game = getGameById(id);
                         if(game) {
-                            // 阻止默认行为（比如按下数字键在页面滚动）
                             e.preventDefault();
-                            // 统计+记录
                             incrementPlayCount(id);
                             addRecentPlay(id);
-                            // 启动游戏
                             openGameInModal(game.gameUrl, game.title);
                             showToast(`🎮 快捷键 ${e.key} 启动：${game.title}`);
                         }
@@ -856,14 +864,6 @@
             setTimeout(() => { splash.classList.add('hidden'); }, 600);
         }
         if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
-
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/Godot-Game-Main-Website/sw.js')
-                    .then(registration => console.log('PWA ServiceWorker 注册成功:', registration.scope))
-                    .catch(error => console.log('PWA ServiceWorker 注册失败:', error));
-            });
-        }
     </script>
 </body>
 </html>
